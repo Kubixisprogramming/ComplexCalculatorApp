@@ -1,0 +1,315 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Basic_Calculations_Activity">
+
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+
+            <!--Plot used to visualize calculations-->
+            <com.github.mikephil.charting.charts.ScatterChart
+                android:layout_width="match_parent"
+                android:layout_height="400dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginHorizontal="10dp"
+
+                android:id="@+id/basicschart"/>
+
+            <!--First Input unit-->
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:layout_below="@id/basicschart"
+                android:layout_marginTop="20dp"
+                android:id="@+id/inputboxtop">
+
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+
+                    android:hint="Re"
+
+                    android:id="@+id/txtinput1"
+                    >
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+
+                        android:textSize="15dp"
+                        android:focusable="false"
+                        />
+                </com.google.android.material.textfield.TextInputLayout>
+
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="40dp"
+                    android:layout_toRightOf="@id/txtinput1"
+
+                    android:hint="Im"
+
+                    android:id="@+id/txtinput2"
+                    >
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+
+                        android:textSize="15dp"
+                        android:focusable="false"
+                        />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!--Button to change number format-->
+                <com.google.android.material.button.MaterialButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@id/txtinput2"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="40dp"
+                    style="@style/Widget.Material3.Button.OutlinedButton"
+
+                    android:text="P"
+                    android:textSize="15dp"
+
+                    android:id="@+id/btninputformattop"/>
+
+
+            </RelativeLayout>
+
+
+
+            <!--second input unit-->
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:layout_below="@id/inputboxtop"
+                android:layout_marginTop="40dp"
+                android:id="@+id/inputboxbottom">
+
+
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+
+                    android:hint="Re"
+
+
+                    android:id="@+id/txtinput3"
+                    >
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+
+                        android:textSize="15dp"
+                        android:focusable="false"
+                        />
+                </com.google.android.material.textfield.TextInputLayout>
+
+
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="40dp"
+                    android:layout_toRightOf="@id/txtinput3"
+
+                    android:hint="Im"
+
+                    android:id="@+id/txtinput4"
+                    >
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+
+                        android:textSize="15dp"
+                        android:focusable="false"
+                        />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!--Button to change number format-->
+                <com.google.android.material.button.MaterialButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@id/txtinput4"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="40dp"
+                    style="@style/Widget.Material3.Button.OutlinedButton"
+
+                    android:text="P"
+                    android:textSize="15dp"
+
+                    android:id="@+id/btninputformatbot"/>
+
+
+            </RelativeLayout>
+
+            <!--Buttons with basic operations (+.-,/,*)-->
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:layout_below="@+id/inputboxbottom"
+                android:layout_marginTop="30dp"
+
+                android:id="@+id/basicopbuttons">
+
+                <!--addition-->
+                <com.google.android.material.button.MaterialButton
+                    android:layout_width="70dp"
+                    android:layout_height="wrap_content"
+
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="23dp"
+                    style="@style/Widget.Material3.Button.OutlinedButton"
+                    app:cornerRadius="0dp"
+
+                    android:text="+"
+                    android:textSize="15dp"
+
+                    android:id="@+id/btnaddition"/>
+
+                <!--subtraction-->
+                <com.google.android.material.button.MaterialButton
+                    android:layout_width="70dp"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/btnaddition"
+
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="25dp"
+                    style="@style/Widget.Material3.Button.OutlinedButton"
+                    app:cornerRadius="0dp"
+
+                    android:text="-"
+                    android:textSize="15dp"
+
+                    android:id="@+id/btnsubtraction"/>
+
+
+                <!--multiplication-->
+                <com.google.android.material.button.MaterialButton
+                    android:layout_width="70dp"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/btnsubtraction"
+
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="25dp"
+                    style="@style/Widget.Material3.Button.OutlinedButton"
+                    app:cornerRadius="0dp"
+
+                    android:text="*"
+                    android:textSize="15dp"
+
+                    android:id="@+id/btnmultiplication"/>
+
+                <!--division-->
+                <com.google.android.material.button.MaterialButton
+                    android:layout_width="70dp"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/btnmultiplication"
+
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="25dp"
+                    style="@style/Widget.Material3.Button.OutlinedButton"
+                    app:cornerRadius="0dp"
+
+                    android:text=":"
+                    android:textSize="15dp"
+
+                    android:id="@+id/btndivision"/>
+
+            </RelativeLayout>
+
+            <!--Output unit-->
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:layout_below="@id/basicopbuttons"
+                android:layout_marginBottom="50dp"
+
+                android:id="@+id/outputbox">
+
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+
+
+                    android:id="@+id/txtoutput1"
+                    >
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+
+                        android:textSize="15dp"
+                        android:focusable="false"
+                        />
+                </com.google.android.material.textfield.TextInputLayout>
+
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="40dp"
+                    android:layout_toRightOf="@id/txtoutput1"
+
+
+                    android:id="@+id/txtoutput2"
+                    >
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+
+                        android:textSize="15dp"
+                        android:focusable="false"
+                        />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!--Button to change number format-->
+                <com.google.android.material.button.MaterialButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@id/txtoutput2"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="40dp"
+                    style="@style/Widget.Material3.Button.OutlinedButton"
+
+                    android:text="P"
+                    android:textSize="15dp"
+
+                    android:id="@+id/btnoutputformat"/>
+
+
+            </RelativeLayout>
+
+
+        </RelativeLayout>
+
+    </ScrollView>
+
+
+</RelativeLayout>

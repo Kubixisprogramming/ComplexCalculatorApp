@@ -8,38 +8,52 @@
 
 
 
-
-
-        <com.google.android.material.button.MaterialButton
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="100dp"
 
-            android:layout_centerVertical="true"
+            android:text="Complex Calculator"
+            android:textStyle="bold"
+            android:textSize="30dp"
+            android:textColor="@color/design_default_color_primary"
+
+            android:id="@+id/txtwelcome"/>
+
+        <!--Basic calculations button-->
+        <com.google.android.material.button.MaterialButton
+            android:layout_width="320dp"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
             android:layout_marginStart="40dp"
             style="@style/Widget.Material3.Button.OutlinedButton"
+            app:cornerRadius="0dp"
 
-            android:text="b"
-            android:textSize="15dp"
+            android:layout_below="@id/txtwelcome"
+            android:layout_marginTop="100dp"
+
+            android:text="Basic calculations"
+            android:textSize="25dp"
 
             android:id="@+id/btngotobasic"/>
 
 
 
+        <!--Advanced calculations button-->
         <com.google.android.material.button.MaterialButton
-            android:layout_width="wrap_content"
+            android:layout_width="320dp"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/btngotobasic"
-
-            android:layout_centerVertical="true"
-            android:layout_marginStart="40dp"
             style="@style/Widget.Material3.Button.OutlinedButton"
+            app:cornerRadius="0dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="50dp"
+            android:layout_below="@id/btngotobasic"
 
-            android:text="a"
-            android:textSize="15dp"
+
+            android:text="Advanced calculations"
+            android:textSize="25dp"
 
             android:id="@+id/btngotoadvanced"/>
-
-
-
 
 </RelativeLayout>

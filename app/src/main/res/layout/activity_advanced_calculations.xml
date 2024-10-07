@@ -6,217 +6,245 @@
     android:layout_height="match_parent"
     tools:context=".Advanced_Calculations_Activity">
 
-    <!--Plot used to visualize calculations-->
-    <com.github.mikephil.charting.charts.ScatterChart
+
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="400dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginHorizontal="10dp"
+        android:layout_height="wrap_content">
 
-        android:id="@+id/advancedchart"/>
-
-
-    <!--First Input unit-->
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-
-        android:layout_below="@id/advancedchart"
-        android:layout_marginTop="20dp"
-        android:id="@+id/advancedinputbox">
-
-
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="100dp"
+        <RelativeLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-
-            android:hint="Re"
-
-            android:id="@+id/txtadvancedinput1"
             >
 
-            <com.google.android.material.textfield.TextInputEditText
+            <!--Plot used to visualize calculations-->
+            <com.github.mikephil.charting.charts.ScatterChart
+                android:layout_width="match_parent"
+                android:layout_height="400dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginHorizontal="10dp"
+
+                android:id="@+id/advancedchart"/>
+
+
+            <!--First Input unit-->
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
 
-                android:textSize="15dp"
-                android:focusable="false"
-                />
-        </com.google.android.material.textfield.TextInputLayout>
+                android:layout_below="@id/advancedchart"
+                android:layout_marginTop="20dp"
+                android:id="@+id/advancedinputbox">
 
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="40dp"
-            android:layout_toRightOf="@id/txtadvancedinput1"
 
-            android:hint="Im"
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
 
-            android:id="@+id/txtadvancedinput2"
-            >
+                    android:hint="R"
 
-            <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/txtadvancedinput1"
+                    >
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+
+                        android:textSize="15dp"
+                        android:focusable="false"
+                        />
+                </com.google.android.material.textfield.TextInputLayout>
+
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="40dp"
+                    android:layout_toRightOf="@id/txtadvancedinput1"
+
+                    android:hint="Phi"
+
+                    android:id="@+id/txtadvancedinput2"
+                    >
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+
+                        android:textSize="15dp"
+                        android:focusable="false"
+                        />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!--Button to change number format-->
+                <com.google.android.material.button.MaterialButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@id/txtadvancedinput2"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="40dp"
+                    style="@style/Widget.Material3.Button.OutlinedButton"
+
+                    android:text="P"
+                    android:textSize="15dp"
+
+                    android:id="@+id/btnadvancedinputformat"/>
+
+
+            </RelativeLayout>
+
+
+            <!--second input unit-->
+
+
+            <!--Output unit-->
+
+            <RelativeLayout
+                android:id="@+id/advancedcalcbox"
+                android:layout_width="match_parent"
+
+                android:layout_height="wrap_content"
+                android:layout_below="@id/advancedinputbox"
+                android:layout_marginTop="40dp">
+
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/txtadvancedinput3"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+
+                    android:hint="n"
+
+                    android:layout_marginStart="20dp">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+
+                        android:focusable="false"
+                        android:textSize="15dp" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+
+                <!--Button to calc root-->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnroot"
+                    style="@style/Widget.Material3.Button.OutlinedButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="45dp"
+                    android:layout_toRightOf="@id/txtadvancedinput3"
+
+                    android:text="R"
+                    android:textSize="15dp"
+
+                    app:cornerRadius="0dp" />
+
+
+                <!--Button to calc exponent-->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnexponent"
+                    style="@style/Widget.Material3.Button.OutlinedButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="45dp"
+                    android:layout_toRightOf="@id/btnroot"
+
+                    android:text="E"
+                    android:textSize="15dp"
+
+                    app:cornerRadius="0dp" />
+
+
+            </RelativeLayout>
+
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
 
-                android:textSize="15dp"
-                android:focusable="false"
-                />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <!--Button to change number format-->
-        <com.google.android.material.button.MaterialButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/txtadvancedinput2"
-            android:layout_centerVertical="true"
-            android:layout_marginStart="40dp"
-            style="@style/Widget.Material3.Button.OutlinedButton"
-
-            android:text="P"
-            android:textSize="15dp"
-
-            android:id="@+id/btnadvancedinputformat"/>
+                android:layout_below="@id/advancedcalcbox"
+                android:layout_marginTop="40dp"
+                android:id="@+id/advancedoutputbox">
 
 
-    </RelativeLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
 
 
-    <!--second input unit-->
+                    android:id="@+id/txtadvancedoutput1"
+                    >
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+
+                        android:textSize="15dp"
+                        android:focusable="false"
+                        />
+                </com.google.android.material.textfield.TextInputLayout>
 
 
-    <!--Output unit-->
 
-    <RelativeLayout
-        android:id="@+id/advancedcalcbox"
-        android:layout_width="match_parent"
-
-        android:layout_height="wrap_content"
-        android:layout_below="@id/advancedinputbox"
-        android:layout_marginTop="40dp">
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="40dp"
+                    android:layout_toRightOf="@id/txtadvancedoutput1"
 
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/txtadvancedinput3"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
 
-            android:hint="n"
+                    android:id="@+id/txtadvancedoutput2"
+                    >
 
-            android:layout_marginStart="20dp">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
 
-            <com.google.android.material.textfield.TextInputEditText
+                        android:textSize="15dp"
+                        android:focusable="false"
+                        />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!--Button to change number format-->
+                <com.google.android.material.button.MaterialButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@id/txtadvancedoutput2"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="40dp"
+                    style="@style/Widget.Material3.Button.OutlinedButton"
+
+                    android:text="P"
+                    android:textSize="15dp"
+
+                    android:id="@+id/btnadvancedoutputformat"/>
+
+
+            </RelativeLayout>
+
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
 
-                android:focusable="false"
-                android:textSize="15dp" />
-        </com.google.android.material.textfield.TextInputLayout>
+                android:orientation="vertical"
+                android:layout_below="@id/advancedoutputbox"
+                android:layout_marginTop="20dp"
+
+                android:id="@+id/extraoutputbox">
 
 
-        <!--Button to calc root-->
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnroot"
-            style="@style/Widget.Material3.Button.OutlinedButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginStart="45dp"
-            android:layout_toRightOf="@id/txtadvancedinput3"
+            </LinearLayout>
 
-            android:text="R"
-            android:textSize="15dp"
+        </RelativeLayout>
 
-            app:cornerRadius="0dp" />
-
-
-        <!--Button to calc exponent-->
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnexponent"
-            style="@style/Widget.Material3.Button.OutlinedButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginStart="45dp"
-            android:layout_toRightOf="@id/btnroot"
-
-            android:text="E"
-            android:textSize="15dp"
-
-            app:cornerRadius="0dp" />
-
-
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-
-        android:layout_below="@id/advancedcalcbox"
-        android:layout_marginTop="40dp"
-        android:id="@+id/advancedoutputbox">
-
-
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-
-
-            android:id="@+id/txtadvancedoutput1"
-            >
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-
-                android:textSize="15dp"
-                android:focusable="false"
-                />
-        </com.google.android.material.textfield.TextInputLayout>
-
-
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="40dp"
-            android:layout_toRightOf="@id/txtadvancedoutput1"
-
-
-
-            android:id="@+id/txtadvancedoutput2"
-            >
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-
-                android:textSize="15dp"
-                android:focusable="false"
-                />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <!--Button to change number format-->
-        <com.google.android.material.button.MaterialButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/txtadvancedoutput2"
-            android:layout_centerVertical="true"
-            android:layout_marginStart="40dp"
-            style="@style/Widget.Material3.Button.OutlinedButton"
-
-            android:text="P"
-            android:textSize="15dp"
-
-            android:id="@+id/btnadvancedoutputformat"/>
-
-
-    </RelativeLayout>
+    </ScrollView>
 
 
 

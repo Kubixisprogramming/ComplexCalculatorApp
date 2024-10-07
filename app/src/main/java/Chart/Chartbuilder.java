@@ -142,7 +142,7 @@ public class Chartbuilder
         XAxis xAxis = chart.getXAxis();
         YAxis leftAxis = chart.getAxisLeft();
 
-        xAxis.setAxisMaximum(-axisdim);
+        xAxis.setAxisMinimum(-axisdim);
         xAxis.setAxisMaximum(axisdim);
         leftAxis.setAxisMinimum(-axisdim);
         leftAxis.setAxisMaximum(axisdim);
@@ -160,7 +160,7 @@ public class Chartbuilder
         {
             axisdim = competitor+1.0f;
 
-            xAxis.setAxisMaximum(-axisdim);
+            xAxis.setAxisMinimum(-axisdim);
             xAxis.setAxisMaximum(axisdim);
             leftAxis.setAxisMinimum(-axisdim);
             leftAxis.setAxisMaximum(axisdim);

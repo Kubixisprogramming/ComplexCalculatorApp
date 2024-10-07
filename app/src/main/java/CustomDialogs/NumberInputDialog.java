@@ -51,36 +51,26 @@ public class NumberInputDialog extends Dialog
     private void Init_Buttons()
     {
         btnenter = findViewById(R.id.btndialogenter);
-        btnkomma = findViewById(R.id.btnkomma);
         btnremove = findViewById(R.id.btndialogremove);
         btnclose = findViewById(R.id.btndialogclose);
         btnclear = findViewById(R.id.btndialogclear);
-        btnminus = findViewById(R.id.btndialogminus);
+
 
         // Initialize the number buttons using a loop
-        for (int i = 0; i < 10; i++)
+        for (int i = 1; i < 10; i++)
         {
             String buttonID = "btn" + i;
             int resID = activity.getResources().getIdentifier(buttonID, "id", activity.getPackageName());
-            buttons[i] = findViewById(resID);
+            buttons[i-1] = findViewById(resID);
 
             // Set OnClickListener for number buttons
-            buttons[i].setOnClickListener(v ->
+            buttons[i-1].setOnClickListener(v ->
             {
                 Button clickedButton = (Button) v;
                 inputbox.getEditText().setText(inputbox.getEditText().getText().toString() +
                         clickedButton.getText().toString());
             });
         }
-
-        btnkomma.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                inputbox.getEditText().setText(inputbox.getEditText().getText().toString() + '.');
-            }
-        });
 
         btnremove.setOnClickListener(new View.OnClickListener()
         {
@@ -117,16 +107,6 @@ public class NumberInputDialog extends Dialog
         });
 
 
-        btnminus.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                inputbox.getEditText().setText(
-                        inputbox.getEditText().getText().toString() + '-'
-                );
-            }
-        });
 
         btnenter.setOnClickListener(new View.OnClickListener()
         {
@@ -159,12 +139,11 @@ public class NumberInputDialog extends Dialog
             return true;
         }
 
-        // Replace any commas with dots (to account for different decimal formats)
-        String normalizedNumber = tocheck.replace(',', '.');
+
 
         try {
             // Try to parse the string to a float
-            Float.parseFloat(normalizedNumber);
+            Integer.parseInt(tocheck);
             return true; // If parsing was successful, return true
         } catch (NumberFormatException e) {
             // If parsing fails, it throws NumberFormatException
@@ -189,6 +168,6 @@ public class NumberInputDialog extends Dialog
     //GUI
 
     private TextInputLayout inputbox;
-    private Button[] buttons = new Button[10];
-    private Button btnenter, btnkomma, btnclose, btnremove, btnclear, btnminus;
+    private Button[] buttons = new Button[9];
+    private Button btnenter, btnclose, btnremove, btnclear;
 }

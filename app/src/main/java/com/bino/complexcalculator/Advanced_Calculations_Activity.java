@@ -3,10 +3,18 @@ package com.bino.complexcalculator;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+
+import java.util.ArrayList;
 
 import Calculator.Calculator;
 import Calculator.CalculatorCallback;
@@ -24,6 +32,7 @@ public class Advanced_Calculations_Activity extends AppCompatActivity implements
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_advanced_calculations);
+        extraresultcontainer = findViewById(R.id.extraoutputbox);
 
         chartbuilder = new Chartbuilder(findViewById(R.id.advancedchart));
 
@@ -92,7 +101,16 @@ public class Advanced_Calculations_Activity extends AppCompatActivity implements
 
         if(operation.equals("root"))
         {
+            //convert both inputs to polar
 
+            if(!inputpolarformat)
+            {
+                String conv[] = Convert_to_Polar(s1,s2);
+                s1 = conv[0];
+                s2 = conv[1];
+            }
+
+            Calculator.Get(Advanced_Calculations_Activity.this).Root(s1,s2,s3);
         }
         else if(operation.equals("expo"))
         {
@@ -115,6 +133,7 @@ public class Advanced_Calculations_Activity extends AppCompatActivity implements
     @Override
     public void OnCalculationResult(String s1, String s2, boolean polarformat)
     {
+        Clear_Extraoutputs();
         if(s1.length() != 0 && s2.length() != 0)
         {
 
@@ -139,6 +158,50 @@ public class Advanced_Calculations_Activity extends AppCompatActivity implements
         }
     }
 
+    @Override
+    public void OnAdvancedCalculationResult(ArrayList<String> outputs, boolean polarformat)
+    {
+        //function is only called when there is a result
+
+        ArrayList<String> cartesian = new ArrayList<>();
+
+        //We need a cartesian set for visual output (and for outputformat if not polar)
+        for(int i = 1; i < outputs.size(); ++i)
+        {
+            String[] conv = Convert_to_Cartesian(outputs.get(0),outputs.get(i));
+            cartesian.add(conv[0]);
+            cartesian.add(conv[1]);
+        }
+
+        if(outputpolarformat == false)
+        {
+            //Add first to to standard outputline
+
+            txtoutput1.getEditText().setText(cartesian.get(0));
+            txtoutput2.getEditText().setText(cartesian.get(1));
+            Add_visual_Output(cartesian.get(0),cartesian.get(1));
+
+            for(int i = 1; i < outputs.size()-1; ++i)
+            {
+                Add_Extraoutput(cartesian.get(2*i),cartesian.get(2*i+1),i+1);
+                Add_visual_Output(cartesian.get(2*i),cartesian.get(2*i+1));
+            }
+        }
+        else
+        {
+
+            txtoutput1.getEditText().setText(outputs.get(0));
+            txtoutput2.getEditText().setText(outputs.get(1));
+            Add_visual_Output(cartesian.get(0),cartesian.get(1));
+
+            for(int i = 1; i < outputs.size()-1; ++i)
+            {
+                Add_Extraoutput(outputs.get(0),outputs.get(i+1),i+1);
+                Add_visual_Output(cartesian.get(i*2),cartesian.get(2*i+1));
+            }
+        }
+
+    }
 
 
     //--------------------------------------------
@@ -206,6 +269,7 @@ public class Advanced_Calculations_Activity extends AppCompatActivity implements
         }
         else if(lane == 1)
         {
+
             if(outputpolarformat == false)
             {
                 output = FormatConverter.Get().Convert_to_Polar(
@@ -215,6 +279,8 @@ public class Advanced_Calculations_Activity extends AppCompatActivity implements
 
                 btnoutputformat.setText("C");
                 outputpolarformat = true;
+
+                Convert_Extraoutputs(true);
             }
             else
             {
@@ -225,6 +291,7 @@ public class Advanced_Calculations_Activity extends AppCompatActivity implements
 
                 btnoutputformat.setText("P");
                 outputpolarformat = false;
+                Convert_Extraoutputs(false);
             }
 
             if(output[0].length() != 0 && output[1].length() != 0)
@@ -233,6 +300,86 @@ public class Advanced_Calculations_Activity extends AppCompatActivity implements
                 txtoutput2.getEditText().setText(output[1]);
             }
         }
+
+    }
+
+
+    private void Convert_Extraoutputs(boolean topolarformat)
+    {
+
+        if(topolarformat)
+        {
+            for (int i = 0; i < extraresultcontainer.getChildCount(); i++)
+            {
+                View child = extraresultcontainer.getChildAt(i);
+
+                // Check if the child is an instance of TextInputLayout
+                if (child instanceof TextInputLayout)
+                {
+                    TextInputLayout textInputLayout = (TextInputLayout) child;
+
+                    if (textInputLayout != null)
+                    {
+                        String s = textInputLayout.getEditText().getText().toString();
+
+
+                        String[] numberstring = s.split(": ");
+
+                        String numstring = numberstring[1];
+                        String prefix = numberstring[0];
+
+                        String[] numbers = numstring.split(",");
+
+                        String s1 = numbers[0];
+                        String s2 = numbers[1];
+
+                        String[] conv = Convert_to_Polar(s1,s2);
+
+
+                        String resultstring = prefix +": "+ conv[0] + " , " + conv[1];
+
+                        textInputLayout.getEditText().setText(resultstring);
+                    }
+                }
+            }
+        }
+        else
+        {
+            for (int i = 0; i < extraresultcontainer.getChildCount(); i++)
+            {
+                View child = extraresultcontainer.getChildAt(i);
+
+                // Check if the child is an instance of TextInputLayout
+                if (child instanceof TextInputLayout)
+                {
+                    TextInputLayout textInputLayout = (TextInputLayout) child;
+
+                    if (textInputLayout != null)
+                    {
+                        String s = textInputLayout.getEditText().getText().toString();
+
+
+                        String[] numberstring = s.split(": ");
+
+                        String numstring = numberstring[1];
+                        String prefix = numberstring[0];
+
+                        String[] numbers = numstring.split(",");
+
+                        String s1 = numbers[0];
+                        String s2 = numbers[1];
+
+                        String[] conv = Convert_to_Cartesian(s1,s2);
+
+
+                        String resultstring = prefix +": "+ conv[0] + " , " + conv[1];
+
+                        textInputLayout.getEditText().setText(resultstring);
+                    }
+                }
+            }
+        }
+
 
     }
 
@@ -356,6 +503,9 @@ public class Advanced_Calculations_Activity extends AppCompatActivity implements
             chartbuilder.Remove_Results();
         }
 
+        //Also clear extra outputs which can spawn because of rooting operation
+        Clear_Extraoutputs();
+
         chartbuilder.Refresh();
     }
 
@@ -373,6 +523,32 @@ public class Advanced_Calculations_Activity extends AppCompatActivity implements
         chartbuilder.Refresh();
     }
 
+    private void Clear_Extraoutputs()
+    {
+        extraresultcontainer.removeAllViews();
+    }
+
+    private void Add_Extraoutput(String s1, String s2, int pos)
+    {
+        // Inflate TextInputLayout from XML
+        LayoutInflater inflater = LayoutInflater.from(this);
+
+        // Inflate text_input_layout_template.xml for txts1
+        TextInputLayout txts1 = (TextInputLayout) inflater.inflate(R.layout.text_input_template, null);
+
+
+        // Get references to the inner TextInputEditText
+        EditText textInputEditText1 = txts1.getEditText();
+
+
+        // Set the text in the TextInputEditText fields
+        textInputEditText1.setText(pos + ": " + s1 + " , " + s2);
+
+
+        // Add the inflated layouts to the parent container (extraresultcontainer)
+        extraresultcontainer.addView(txts1);
+    }
+
 
 
     private AdvNumberInputDialog inputdialog = null;
@@ -381,8 +557,10 @@ public class Advanced_Calculations_Activity extends AppCompatActivity implements
     private Chartbuilder chartbuilder = null;
 
     //GUI
+
+    private LinearLayout extraresultcontainer=null;
     private Button btninputformat, btnoutputformat;
-    private boolean inputpolarformat = false, outputpolarformat = false;
+    private boolean inputpolarformat = true, outputpolarformat = true;
 
     private TextInputLayout txtinput1, txtinput2, txtinput3, txtoutput1, txtoutput2;
 

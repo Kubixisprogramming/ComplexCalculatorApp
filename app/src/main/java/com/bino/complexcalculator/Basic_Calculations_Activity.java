@@ -26,6 +26,8 @@ import Calculator.Calculator;
 import Calculator.CalculatorCallback;
 import Calculator.FormatConverter;
 import Chart.Chartbuilder;
+import CustomDialogs.AdvInputCallback;
+import CustomDialogs.AdvNumberInputDialog;
 import CustomDialogs.NumberInputCallback;
 import CustomDialogs.NumberInputDialog;
 
@@ -237,6 +239,11 @@ public class Basic_Calculations_Activity extends AppCompatActivity implements Ca
         }
     }
 
+    @Override
+    public void OnAdvancedCalculationResult(ArrayList<String> outputs, boolean polarformat) {
+
+    }
+
 
     //---------------------------------------
     //Chart & visual related
@@ -248,8 +255,8 @@ public class Basic_Calculations_Activity extends AppCompatActivity implements Ca
             @Override
             public void onClick(View view)
             {
-                inputdialog = new NumberInputDialog(Basic_Calculations_Activity.this, Basic_Calculations_Activity.this,
-                        new NumberInputCallback()
+                inputdialog = new AdvNumberInputDialog(Basic_Calculations_Activity.this, Basic_Calculations_Activity.this,
+                        new AdvInputCallback()
                         {
                             @Override
                             public void OnNumberInput(String num)
@@ -271,8 +278,8 @@ public class Basic_Calculations_Activity extends AppCompatActivity implements Ca
             @Override
             public void onClick(View view)
             {
-                inputdialog = new NumberInputDialog(Basic_Calculations_Activity.this, Basic_Calculations_Activity.this,
-                        new NumberInputCallback()
+                inputdialog = new AdvNumberInputDialog(Basic_Calculations_Activity.this, Basic_Calculations_Activity.this,
+                        new AdvInputCallback()
                         {
 
                             @Override
@@ -295,8 +302,8 @@ public class Basic_Calculations_Activity extends AppCompatActivity implements Ca
             @Override
             public void onClick(View view)
             {
-                inputdialog = new NumberInputDialog(Basic_Calculations_Activity.this, Basic_Calculations_Activity.this,
-                        new NumberInputCallback()
+                inputdialog = new AdvNumberInputDialog(Basic_Calculations_Activity.this, Basic_Calculations_Activity.this,
+                        new AdvInputCallback()
                         {
                             @Override
                             public void OnNumberInput(String num)
@@ -319,8 +326,8 @@ public class Basic_Calculations_Activity extends AppCompatActivity implements Ca
             @Override
             public void onClick(View view)
             {
-                inputdialog = new NumberInputDialog(Basic_Calculations_Activity.this, Basic_Calculations_Activity.this,
-                        new NumberInputCallback()
+                inputdialog = new AdvNumberInputDialog(Basic_Calculations_Activity.this, Basic_Calculations_Activity.this,
+                        new AdvInputCallback()
                         {
                             @Override
                             public void OnNumberInput(String num)
@@ -556,7 +563,7 @@ public class Basic_Calculations_Activity extends AppCompatActivity implements Ca
 
 
     //Number input system
-    NumberInputDialog inputdialog = null;
+    AdvNumberInputDialog inputdialog = null;
 
     //GUI
 

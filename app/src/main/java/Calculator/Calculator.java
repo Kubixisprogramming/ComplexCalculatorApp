@@ -1,5 +1,7 @@
 package Calculator;
 
+import java.util.ArrayList;
+
 public class Calculator
 {
 
@@ -117,6 +119,37 @@ public class Calculator
             float phi = Float.parseFloat(s2) * Float.parseFloat(exponent);
 
             instance.callback.OnCalculationResult(String.valueOf(r),String.valueOf(phi),true);
+        }
+
+    }
+
+    public void Root(String s1, String s2, String rooter)
+    {
+        if(s1.length() == 0 || s2.length() == 0 || rooter.length() == 0)
+        {
+            instance.callback.OnCalculationResult("","",true);
+        }
+        else
+        {
+            ArrayList<String> results = new ArrayList<>();
+
+            float r = Float.parseFloat(s1);
+            float phi = Float.parseFloat(s2);
+            float n = Float.parseFloat(rooter);
+
+            r = (float)Math.pow(r,1/n);
+
+
+            results.add(String.valueOf(r));
+
+            for(int i = 1; i <= n; ++i)
+            {
+                double phase = (phi / n) + (2.0*Math.PI*(i-1)) / n;
+
+                results.add(String.valueOf(phase));
+            }
+
+            instance.callback.OnAdvancedCalculationResult(results,true);
         }
 
     }

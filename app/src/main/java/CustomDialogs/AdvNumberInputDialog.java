@@ -130,7 +130,7 @@ public class AdvNumberInputDialog extends Dialog
                 }
                 else if(!curinput.equals(""))
                 {
-
+                    inputbox.getEditText().setText(curinput.substring(0, curinput.length() - 1));
                 }
             }
         });

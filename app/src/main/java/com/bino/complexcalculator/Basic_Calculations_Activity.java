@@ -2,10 +2,14 @@ package com.bino.complexcalculator;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.widget.Button;
+import androidx.appcompat.widget.Toolbar;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.charts.ScatterChart;
@@ -39,6 +43,7 @@ public class Basic_Calculations_Activity extends AppCompatActivity implements Ca
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_basic_calculations);
+        Create_Topbar();
 
         chartbuilder = new Chartbuilder(findViewById(R.id.basicschart));
 
@@ -217,7 +222,7 @@ public class Basic_Calculations_Activity extends AppCompatActivity implements Ca
     {
         if(s1.length() != 0 && s2.length() != 0)
         {
-
+            Refresh_Visuals();
             if(outputpolarformat == true && polarformat == false)
             {
                 String[] conv = Convert_to_Polar(s1,s2);
@@ -555,6 +560,39 @@ public class Basic_Calculations_Activity extends AppCompatActivity implements Ca
     }
 
 
+
+    //Menu
+
+
+    //Creates and sets special top bar
+    private void Create_Topbar()
+    {
+        toolbar = findViewById(R.id.topbarbasiccalculations);
+        setSupportActionBar(toolbar);
+
+        //Set navigation button
+        //Switch back to main activity when back button is pressed
+        toolbar.setNavigationOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                Intent intent = new Intent(Basic_Calculations_Activity.this,MainActivity.class);
+                startActivity(intent);
+            }
+        });
+    }
+
+    //Necessary to link menu to top bar
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.basic_calculations_menu, menu);
+        return true;
+    }
+
+
     //--------------------------------------------
 
 
@@ -575,5 +613,7 @@ public class Basic_Calculations_Activity extends AppCompatActivity implements Ca
             outputpolarformat = false;
 
     private Button btnaddition, btnsubtraction, btnmultiplication,btndivision;
+
+    private Toolbar toolbar;
 
 }

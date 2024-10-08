@@ -23,6 +23,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import Calculator.FormatConverter;
+
 public class AdvNumberInputDialog extends Dialog
 {
 
@@ -184,9 +186,7 @@ public class AdvNumberInputDialog extends Dialog
             try
             {
                 Expression expression = new Expression(curinput);
-                BigDecimal result = expression.evaluate().getNumberValue();  // This will throw an ArithmeticException
-
-                result = result.setScale(6, RoundingMode.HALF_UP);
+                BigDecimal result = expression.evaluate().getNumberValue();  // This can throw an ArithmeticException
 
                 inputbox.getEditText().setText(result.toString());
 
@@ -250,11 +250,9 @@ public class AdvNumberInputDialog extends Dialog
 
 
 
-
-
     private void Finish_Dialog(String input)
     {
-        callback.OnNumberInput(input);
+        callback.OnNumberInput(FormatConverter.Get().Round(input));
         this.dismiss();
     }
 

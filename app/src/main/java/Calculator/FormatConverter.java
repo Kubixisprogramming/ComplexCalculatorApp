@@ -1,5 +1,8 @@
 package Calculator;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+
 public class FormatConverter
 {
 
@@ -44,8 +47,8 @@ public class FormatConverter
             phi = (float)Math.acos((-fre) / r) + (float)Math.PI;
         }
 
-        output[0] = String.valueOf(r);
-        output[1] = String.valueOf(phi);
+        output[0] = Round(String.valueOf(r));
+        output[1] = Round(String.valueOf(phi));
 
         return output;
     }
@@ -65,12 +68,21 @@ public class FormatConverter
         float re = fr * (float)Math.cos(fphi);
         float im = fr * (float)Math.sin(fphi);
 
-        output[0] = String.valueOf(re);
-        output[1] = String.valueOf(im);
+        output[0] = Round(String.valueOf(re));
+        output[1] = Round(String.valueOf(im));
 
         return output;
     }
 
 
+    public String Round(String in)
+    {
+        BigDecimal bd = new BigDecimal(in);
+        bd = bd.setScale(precision, RoundingMode.HALF_UP).stripTrailingZeros();  // Rounds to precision decimal places
+        return bd.toString();
+    }
+
+
     private static FormatConverter instance = null;
+    private static int precision = 5;
 }

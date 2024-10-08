@@ -7,9 +7,30 @@
     tools:context=".Advanced_Calculations_Activity">
 
 
+    <!-- Top App Bar -->
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:titleTextColor="@color/design_default_color_primary"
+            app:title="advanced calculations"
+            app:menu="@menu/advanced_calculations_menu"
+            app:navigationIcon="@drawable/baseline_arrow_back_24"
+            android:background="@color/design_default_color_background"
+
+            android:id="@+id/topbaradvcalculations"/>
+    </com.google.android.material.appbar.AppBarLayout>
+
+
+
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="70dp">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -86,7 +107,7 @@
                     android:layout_marginStart="40dp"
                     style="@style/Widget.Material3.Button.OutlinedButton"
 
-                    android:text="P"
+                    android:text="C"
                     android:textSize="15dp"
 
                     android:id="@+id/btnadvancedinputformat"/>
@@ -220,7 +241,7 @@
                     android:layout_marginStart="40dp"
                     style="@style/Widget.Material3.Button.OutlinedButton"
 
-                    android:text="P"
+                    android:text="C"
                     android:textSize="15dp"
 
                     android:id="@+id/btnadvancedoutputformat"/>

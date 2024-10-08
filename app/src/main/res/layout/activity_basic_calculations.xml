@@ -7,9 +7,33 @@
     tools:context=".Basic_Calculations_Activity">
 
 
+
+    <!-- Top App Bar -->
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:titleTextColor="@color/design_default_color_primary"
+            app:title="basic calculations"
+            app:menu="@menu/basic_calculations_menu"
+            app:navigationIcon="@drawable/baseline_arrow_back_24"
+            android:background="@color/design_default_color_background"
+
+            android:id="@+id/topbarbasiccalculations"/>
+    </com.google.android.material.appbar.AppBarLayout>
+
+
+
+
+
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="70dp">
 
         <RelativeLayout
             android:layout_width="match_parent"

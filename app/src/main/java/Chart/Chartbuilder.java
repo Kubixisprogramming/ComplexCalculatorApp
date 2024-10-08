@@ -24,7 +24,6 @@ public class Chartbuilder
 
         axisdim = stdaxisdim;
 
-
         Init();
     }
 
@@ -48,14 +47,17 @@ public class Chartbuilder
     {
         Adjust_Axis(x,y);
 
-        resultset.addEntry(new Entry(x,y));
+        resultset.addEntry(new Entry(x, y));
+
 
         resultset.notifyDataSetChanged();
     }
 
+
+
+
     public void Remove_Results()
     {
-
         resultset.clear();
         chart.notifyDataSetChanged();
     }
@@ -148,7 +150,7 @@ public class Chartbuilder
         leftAxis.setAxisMaximum(axisdim);
     }
 
-    //ensures that everypoint is inbounds of axis
+    //ensures that every point is inbounds of axis
     private void Adjust_Axis(float x, float y)
     {
         XAxis xAxis = chart.getXAxis();
@@ -158,14 +160,13 @@ public class Chartbuilder
 
         if(competitor >= axisdim)
         {
-            axisdim = competitor+1.0f;
+            axisdim = competitor + 1.0f;
 
             xAxis.setAxisMinimum(-axisdim);
             xAxis.setAxisMaximum(axisdim);
             leftAxis.setAxisMinimum(-axisdim);
             leftAxis.setAxisMaximum(axisdim);
         }
-
     }
 
 

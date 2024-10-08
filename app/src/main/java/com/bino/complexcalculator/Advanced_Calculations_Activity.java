@@ -1,9 +1,13 @@
 package com.bino.complexcalculator;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -33,6 +37,7 @@ public class Advanced_Calculations_Activity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_advanced_calculations);
         extraresultcontainer = findViewById(R.id.extraoutputbox);
+        Create_Topbar();
 
         chartbuilder = new Chartbuilder(findViewById(R.id.advancedchart));
 
@@ -136,6 +141,7 @@ public class Advanced_Calculations_Activity extends AppCompatActivity implements
         Clear_Extraoutputs();
         if(s1.length() != 0 && s2.length() != 0)
         {
+            Refresh_Visuals();
 
             if(outputpolarformat == true && polarformat == false)
             {
@@ -163,6 +169,8 @@ public class Advanced_Calculations_Activity extends AppCompatActivity implements
     {
         //function is only called when there is a result
 
+        Clear_Extraoutputs();
+        Refresh_Visuals();
         ArrayList<String> cartesian = new ArrayList<>();
 
         //We need a cartesian set for visual output (and for outputformat if not polar)
@@ -199,8 +207,9 @@ public class Advanced_Calculations_Activity extends AppCompatActivity implements
                 Add_Extraoutput(outputs.get(0),outputs.get(i+1),i+1);
                 Add_visual_Output(cartesian.get(i*2),cartesian.get(2*i+1));
             }
-        }
 
+
+        }
     }
 
 
@@ -523,6 +532,8 @@ public class Advanced_Calculations_Activity extends AppCompatActivity implements
         chartbuilder.Refresh();
     }
 
+
+
     private void Clear_Extraoutputs()
     {
         extraresultcontainer.removeAllViews();
@@ -550,11 +561,48 @@ public class Advanced_Calculations_Activity extends AppCompatActivity implements
     }
 
 
+    //Menu
+
+
+    //Creates and sets special top bar
+    private void Create_Topbar()
+    {
+        toolbar = findViewById(R.id.topbaradvcalculations);
+        setSupportActionBar(toolbar);
+
+        //Set navigation button
+        //Switch back to main activity when back button is pressed
+        toolbar.setNavigationOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                Intent intent = new Intent(Advanced_Calculations_Activity.this,MainActivity.class);
+                startActivity(intent);
+            }
+        });
+    }
+
+    //Necessary to link menu to top bar
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.advanced_calculations_menu, menu);
+        return true;
+    }
+
+
+    //------------------------------------------------
+
+
+
 
     private AdvNumberInputDialog inputdialog = null;
     private NumberInputDialog basicinputdialog = null;
 
     private Chartbuilder chartbuilder = null;
+
 
     //GUI
 
@@ -565,4 +613,6 @@ public class Advanced_Calculations_Activity extends AppCompatActivity implements
     private TextInputLayout txtinput1, txtinput2, txtinput3, txtoutput1, txtoutput2;
 
     private Button btnroot, btnexpo;
+
+    private Toolbar toolbar;
 }

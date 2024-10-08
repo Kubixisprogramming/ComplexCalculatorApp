@@ -1,5 +1,6 @@
 package Calculator;
 
+import java.text.Normalizer;
 import java.util.ArrayList;
 
 public class Calculator
@@ -35,7 +36,8 @@ public class Calculator
             //Adding im
             float im = Float.parseFloat(s2) + Float.parseFloat(s4);
 
-            instance.callback.OnCalculationResult(String.valueOf(re),String.valueOf(im),false);
+            instance.callback.OnCalculationResult(FormatConverter.Get().Round(String.valueOf(re)),
+                    FormatConverter.Get().Round(String.valueOf(im)),false);
         }
     }
 
@@ -54,7 +56,8 @@ public class Calculator
             //sub im
             float im = Float.parseFloat(s2) - Float.parseFloat(s4);
 
-            instance.callback.OnCalculationResult(String.valueOf(re),String.valueOf(im),false);
+            instance.callback.OnCalculationResult(FormatConverter.Get().Round(String.valueOf(re)),
+                    FormatConverter.Get().Round(String.valueOf(im)),false);
         }
     }
 
@@ -76,7 +79,8 @@ public class Calculator
             //add phi's
             float phi = Float.parseFloat(s2) + Float.parseFloat(s4);
 
-            instance.callback.OnCalculationResult(String.valueOf(r),String.valueOf(phi),true);
+            instance.callback.OnCalculationResult(FormatConverter.Get().Round(String.valueOf(r)),
+                    FormatConverter.Get().Round(String.valueOf(phi)),true);
         }
     }
 
@@ -98,7 +102,8 @@ public class Calculator
             //sub phi's
             float phi = Float.parseFloat(s2) - Float.parseFloat(s4);
 
-            instance.callback.OnCalculationResult(String.valueOf(r),String.valueOf(phi),true);
+            instance.callback.OnCalculationResult(FormatConverter.Get().Round(String.valueOf(r)),
+                    FormatConverter.Get().Round(String.valueOf(phi)),true);
         }
     }
 
@@ -118,7 +123,8 @@ public class Calculator
 
             float phi = Float.parseFloat(s2) * Float.parseFloat(exponent);
 
-            instance.callback.OnCalculationResult(String.valueOf(r),String.valueOf(phi),true);
+            instance.callback.OnCalculationResult(FormatConverter.Get().Round(String.valueOf(r)),
+                    FormatConverter.Get().Round(String.valueOf(phi)),true);
         }
 
     }
@@ -140,13 +146,14 @@ public class Calculator
             r = (float)Math.pow(r,1/n);
 
 
-            results.add(String.valueOf(r));
+
+            results.add(FormatConverter.Get().Round(String.valueOf(r)));
 
             for(int i = 1; i <= n; ++i)
             {
                 double phase = (phi / n) + (2.0*Math.PI*(i-1)) / n;
 
-                results.add(String.valueOf(phase));
+                results.add(FormatConverter.Get().Round(String.valueOf(phase)));
             }
 
             instance.callback.OnAdvancedCalculationResult(results,true);

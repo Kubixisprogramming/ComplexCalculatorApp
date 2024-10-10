@@ -4,13 +4,14 @@ import static java.lang.Math.abs;
 
 import android.graphics.Color;
 
-import com.github.mikephil.charting.charts.ScatterChart;
-import com.github.mikephil.charting.components.XAxis;
-import com.github.mikephil.charting.components.YAxis;
-import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.data.ScatterData;
-import com.github.mikephil.charting.data.ScatterDataSet;
-import com.github.mikephil.charting.interfaces.datasets.IScatterDataSet;
+import com.androidplot.ui.widget.TextLabelWidget;
+import com.androidplot.xy.BoundaryMode;
+import com.androidplot.xy.LineAndPointFormatter;
+import com.androidplot.xy.PointLabelFormatter;
+import com.androidplot.xy.SimpleXYSeries;
+import com.androidplot.xy.XYPlot;
+import com.androidplot.xy.XYSeries;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,166 +19,112 @@ import java.util.List;
 public class Chartbuilder
 {
 
-    public Chartbuilder(ScatterChart ref)
+    public Chartbuilder(XYPlot ref)
     {
         chart = ref;
-
-        axisdim = stdaxisdim;
-
+        axisDim = stdAxisDim;
         Init();
     }
 
-    //refreshing is responsibility of user
+    // Refreshing is responsibility of the user
     public void Refresh()
     {
-        chart.invalidate();
+        chart.redraw();
     }
 
     public void Add_Input(float x, float y)
     {
-        Adjust_Axis(x,y);
+        Adjust_Axis(x, y);
+        inputSeries.addLast(x, y);
+    }
 
-        inputset.addEntry(new Entry(x,y));
+    public void Remove_Input(float x,float y)
+    {
 
-        inputset.notifyDataSetChanged();
 
     }
 
     public void Add_Result(float x, float y)
     {
-        Adjust_Axis(x,y);
+        Adjust_Axis(x, y);
+        resultSeries.addLast(x, y);
 
-        resultset.addEntry(new Entry(x, y));
-
-
-        resultset.notifyDataSetChanged();
     }
-
-
-
 
     public void Remove_Results()
     {
-        resultset.clear();
-        chart.notifyDataSetChanged();
+        resultSeries.clear();
     }
-
 
     public void clear()
     {
-
-        inputset.clear();
-
-        resultset.clear();
-
+        inputSeries.clear();
+        resultSeries.clear();
         Reset_Axis();
-
-        chart.notifyDataSetChanged();
     }
 
-
-
+    // Initialize the chart and datasets
     private void Init()
     {
-        //Add origin point
-        List<Entry> entries = new ArrayList<>();
-        entries.add(new Entry(0, 0));
+        // Create origin point
+        List<Number> originX = new ArrayList<>();
+        List<Number> originY = new ArrayList<>();
+        originX.add(0);
+        originY.add(0);
 
-        // Create origin
-        ScatterDataSet originset = new ScatterDataSet(entries, "Origin");
-        originset.setColor(Color.GREEN);
-        originset.setScatterShape(ScatterChart.ScatterShape.CIRCLE);
+        // Create input series
+        inputSeries = new SimpleXYSeries("Input");
+        resultSeries = new SimpleXYSeries("Result");
 
-        //Create dataset for input points to display
+        // Create formatters to style input and result points
+        LineAndPointFormatter inputFormatter = new LineAndPointFormatter(Color.BLUE, Color.BLUE, null, new PointLabelFormatter());
+        LineAndPointFormatter resultFormatter = new LineAndPointFormatter(Color.RED, Color.RED, null, new PointLabelFormatter());
 
-        inputset = new ScatterDataSet(new ArrayList<>(),"Input");
-        inputset.setColor(Color.BLUE);
-        inputset.setScatterShape(ScatterChart.ScatterShape.CIRCLE);
+        // Add series and formatters to the plot
+        chart.addSeries(inputSeries, inputFormatter);
+        chart.addSeries(resultSeries, resultFormatter);
 
-        //Create dataset for input results to display
+        // Set domain (X-axis) and range (Y-axis) boundaries
+        chart.setDomainBoundaries(-axisDim, axisDim, BoundaryMode.FIXED);
+        chart.setRangeBoundaries(-axisDim, axisDim, BoundaryMode.FIXED);
 
-        resultset = new ScatterDataSet(new ArrayList<>(),"Result");
-        resultset.setColor(Color.RED);
-        resultset.setScatterShape(ScatterChart.ScatterShape.CIRCLE);
+        // Set the chart title, labels, etc.
+        chart.setTitle((TextLabelWidget) null);
+        chart.getLegend().setVisible(true);
 
-        // Create a list of datasets
-        List<IScatterDataSet> dataSets = new ArrayList<>();
-        dataSets.add(originset);
-        dataSets.add(inputset);
-        dataSets.add(resultset);
+        // Customize axes
+        chart.getDomainTitle().setText("X Axis");
+        chart.getRangeTitle().setText("Y Axis");
 
-        // Set the data to the chart
-        ScatterData scatterData = new ScatterData(dataSets);
-        chart.setData(scatterData);
-
-
-        // Configure the X axis
-        XAxis xAxis = chart.getXAxis();
-        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-        xAxis.setAxisMinimum(-axisdim);
-        xAxis.setAxisMaximum(axisdim);
-        xAxis.setGranularity(0.1f);
-        xAxis.setDrawGridLines(true);
-
-
-
-        // Configure the left Y axis
-        YAxis leftAxis = chart.getAxisLeft();
-        leftAxis.setAxisMinimum(-axisdim);
-        leftAxis.setAxisMaximum(axisdim);
-        leftAxis.setGranularity(0.1f);
-        leftAxis.setDrawGridLines(true);
-
-        // Disable the right Y axis
-        chart.getAxisRight().setEnabled(false);
-
-
-        // Customize chart
-        chart.getDescription().setEnabled(false);  // Remove the description label
-        chart.getLegend().setEnabled(true);        // Enable the legend
+        // Refresh to apply changes
+        chart.redraw();
     }
 
     private void Reset_Axis()
     {
-        axisdim =stdaxisdim;
-
-        XAxis xAxis = chart.getXAxis();
-        YAxis leftAxis = chart.getAxisLeft();
-
-        xAxis.setAxisMinimum(-axisdim);
-        xAxis.setAxisMaximum(axisdim);
-        leftAxis.setAxisMinimum(-axisdim);
-        leftAxis.setAxisMaximum(axisdim);
+        axisDim = stdAxisDim;
+        chart.setDomainBoundaries(-axisDim, axisDim, BoundaryMode.FIXED);
+        chart.setRangeBoundaries(-axisDim, axisDim, BoundaryMode.FIXED);
+        chart.redraw();
     }
 
-    //ensures that every point is inbounds of axis
+    // Adjusts the axis if new data points go beyond current bounds
     private void Adjust_Axis(float x, float y)
     {
-        XAxis xAxis = chart.getXAxis();
-        YAxis leftAxis = chart.getAxisLeft();
+        float competitor = Math.max(Math.abs(x), Math.abs(y));
 
-        float competitor = Math.max(Math.abs(x),Math.abs(y));
-
-        if(competitor >= axisdim)
-        {
-            axisdim = competitor + 1.0f;
-
-            xAxis.setAxisMinimum(-axisdim);
-            xAxis.setAxisMaximum(axisdim);
-            leftAxis.setAxisMinimum(-axisdim);
-            leftAxis.setAxisMaximum(axisdim);
+        if (competitor >= axisDim) {
+            axisDim = competitor + 1.0f;
+            chart.setDomainBoundaries(-axisDim, axisDim, BoundaryMode.FIXED);
+            chart.setRangeBoundaries(-axisDim, axisDim, BoundaryMode.FIXED);
         }
     }
 
 
 
-    private ScatterChart chart = null;
-    private ScatterDataSet inputset = null;
-    private ScatterDataSet resultset = null;
-
-
-    //Axis dimention
-    private float axisdim;
-    private float stdaxisdim=5.0f;
-
+    private XYPlot chart;
+    private SimpleXYSeries inputSeries;
+    private SimpleXYSeries resultSeries;    // Axis dimension settings
+    private float axisDim;
+    private float stdAxisDim = 5.0f;
 }

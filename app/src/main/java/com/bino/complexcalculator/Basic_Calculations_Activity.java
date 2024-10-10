@@ -11,16 +11,6 @@ import android.view.View;
 import android.widget.Button;
 import androidx.appcompat.widget.Toolbar;
 
-import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.charts.ScatterChart;
-import com.github.mikephil.charting.components.Description;
-import com.github.mikephil.charting.components.XAxis;
-import com.github.mikephil.charting.components.YAxis;
-import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.data.LineData;
-import com.github.mikephil.charting.data.LineDataSet;
-import com.github.mikephil.charting.data.ScatterData;
-import com.github.mikephil.charting.data.ScatterDataSet;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.ArrayList;
@@ -34,7 +24,7 @@ import Calculator.FormatType;
 import Calculator.Translator_Callback;
 import Calculator.Operation;
 import Calculator.FormatLoc;
-import Chart.Chartbuilder;
+
 import CustomDialogs.AdvInputCallback;
 import CustomDialogs.AdvNumberInputDialog;
 import CustomDialogs.NumberInputCallback;
@@ -50,8 +40,9 @@ public class Basic_Calculations_Activity extends AppCompatActivity implements Tr
         setContentView(R.layout.activity_basic_calculations);
         Create_Topbar();
 
-        chartbuilder = new Chartbuilder(findViewById(R.id.basicschart));
-        translator = new Translator(FormatType.CARTESIAN,FormatType.CARTESIAN,FormatType.CARTESIAN,Basic_Calculations_Activity.this);
+
+        translator = new Translator(FormatType.CARTESIAN,FormatType.CARTESIAN,FormatType.CARTESIAN,Basic_Calculations_Activity.this,
+                findViewById(R.id.basicchart));
 
         Init_Views();
         Init_Onclick();
@@ -187,6 +178,8 @@ public class Basic_Calculations_Activity extends AppCompatActivity implements Tr
                             {
                                 if(!txtinput1.getEditText().getText().equals(num))
                                 {
+                                    translator.Notify_Input_Changed_Left(num,txtinput1.getEditText().getText().toString(),
+                                            txtinput2.getEditText().getText().toString());
                                     txtinput1.getEditText().setText(num);
                                     txtoutput1.getEditText().setText("");
                                     txtoutput2.getEditText().setText("");
@@ -212,6 +205,8 @@ public class Basic_Calculations_Activity extends AppCompatActivity implements Tr
                             {
                                 if(!txtinput2.getEditText().getText().equals(num))
                                 {
+                                    translator.Notify_Input_Changed_Right(num,txtinput2.getEditText().getText().toString(),
+                                            txtinput1.getEditText().getText().toString());
                                     txtinput2.getEditText().setText(num);
                                     txtoutput1.getEditText().setText("");
                                     txtoutput2.getEditText().setText("");
@@ -236,6 +231,8 @@ public class Basic_Calculations_Activity extends AppCompatActivity implements Tr
                             {
                                 if(!txtinput3.getEditText().equals(num))
                                 {
+                                    translator.Notify_Input_Changed_Left(num,txtinput3.getEditText().getText().toString(),
+                                            txtinput4.getEditText().getText().toString());
                                     txtinput3.getEditText().setText(num);
                                     txtoutput1.getEditText().setText("");
                                     txtoutput2.getEditText().setText("");
@@ -261,6 +258,8 @@ public class Basic_Calculations_Activity extends AppCompatActivity implements Tr
                             {
                                 if(!txtinput4.getEditText().getText().equals(num))
                                 {
+                                    translator.Notify_Input_Changed_Right(num,txtinput4.getEditText().getText().toString(),
+                                            txtinput3.getEditText().getText().toString());
                                     txtinput4.getEditText().setText(num);
                                     txtoutput1.getEditText().setText("");
                                     txtoutput2.getEditText().setText("");
@@ -424,7 +423,6 @@ public class Basic_Calculations_Activity extends AppCompatActivity implements Tr
 
 
 
-    private Chartbuilder chartbuilder = null;
     private Translator translator = null;
     //Number input system
     AdvNumberInputDialog inputdialog = null;

@@ -1,7 +1,11 @@
 package Calculator;
 
 
+import com.androidplot.xy.XYPlot;
+
 import java.util.ArrayList;
+
+import Chart.Chartbuilder;
 
 //Translator class is the "translator" between the calculator class and activity
 //activity gives strings and operations to the translator, it translates the input from activity
@@ -9,13 +13,14 @@ import java.util.ArrayList;
 public class Translator implements CalculatorCallback
 {
 
-    public Translator(FormatType t1, FormatType t2, FormatType t3,Translator_Callback callback)
+    public Translator(FormatType t1, FormatType t2, FormatType t3,Translator_Callback callback, XYPlot ref)
     {
         formatinput1 = t1;
         formatinput2 = t2;
         formatoutput1 = t3;
 
         this.callback = callback;
+        chart = new Chartbuilder(ref);
     }
 
 
@@ -247,7 +252,8 @@ public class Translator implements CalculatorCallback
 
         if(op == Operation.ADD || op == Operation.SUB)
         {
-            //calculator returns cartesian output
+            //calculator returns cartesian output fitting for chart
+            Chartify(s1,s2,FormatType.CARTESIAN);
             //check if conversion to activity output format is needed
 
             if(formatoutput1 == FormatType.POLAR)
@@ -270,6 +276,14 @@ public class Translator implements CalculatorCallback
                 String[] conv = FormatConverter.Get().Convert_to_Cartesian(s1,s2);
                 s1 = conv[0];
                 s2 = conv[1];
+
+                //send result also to chart
+                Chartify(s1,s2,FormatType.CARTESIAN);
+            }
+            else
+            {
+                //chart result needs cartesian format
+                Chartify(s1,s2,FormatType.POLAR);
             }
 
             //return result
@@ -305,6 +319,10 @@ public class Translator implements CalculatorCallback
                 }
 
                 out = cartesianpairs;
+
+                //send coordinates also to chart
+                Chartify(out,FormatType.CARTESIAN);
+
             }
             else if(formatoutput1 == FormatType.POLAR)
             {
@@ -318,6 +336,9 @@ public class Translator implements CalculatorCallback
                 }
 
                 out = polarpairs;
+
+                //additional conversion is needed for chart
+                Chartify(out,FormatType.POLAR);
             }
 
             //return result
@@ -414,8 +435,108 @@ public class Translator implements CalculatorCallback
     }
 
 
-    private FormatType formatinput1, formatinput2, formatoutput1;
+    //Charting
 
+    public void Notify_Input_Changed_Left(String newinput1,String oldinput1, String oldinput2)
+    {
+        boolean refresh_needed = false;
+
+        //remove if there was a old point
+        if(!oldinput1.equals("") && !oldinput2.equals(""))
+        {
+            chart.Remove_Input(Float.parseFloat(oldinput1), Float.parseFloat(oldinput2));
+            refresh_needed = true;
+        }
+
+        //check if there will be a new input
+        if(!newinput1.equals("") && !oldinput2.equals(""))
+        {
+            chart.Add_Input(Float.parseFloat(newinput1), Float.parseFloat(oldinput2));
+            refresh_needed = true;
+        }
+
+        if(refresh_needed)
+        {
+            chart.Refresh();
+        }
+    }
+
+    public void Notify_Input_Changed_Right(String newinput2,String oldinput2, String oldinput1)
+    {
+        boolean refresh_needed = false;
+
+        //remove if there was a old point
+        if(!oldinput1.equals("") && !oldinput2.equals(""))
+        {
+            chart.Remove_Input(Float.parseFloat(oldinput1), Float.parseFloat(oldinput2));
+            refresh_needed = true;
+        }
+
+        //check if there will be a new input
+        if(!newinput2.equals("") && !oldinput1.equals(""))
+        {
+            chart.Add_Input(Float.parseFloat(oldinput1), Float.parseFloat(newinput2));
+            refresh_needed = true;
+        }
+
+        if(refresh_needed)
+        {
+            chart.Refresh();
+        }
+    }
+
+    private void Add_Results(ArrayList<String> resultpairs)
+    {
+        //clear possible previous results
+        chart.Remove_Results();
+
+        //Add new results
+        for(int i = 0; i*2 < resultpairs.size(); ++i)
+        {
+            chart.Add_Result(Float.parseFloat(resultpairs.get(i*2)),
+                    Float.parseFloat(resultpairs.get(i*2+1)));
+        }
+
+        chart.Refresh();
+    }
+
+    //Helper functions to turn results into fitting string vectors
+    private void Chartify(String s1, String s2, FormatType format)
+    {
+        ArrayList<String> output = new ArrayList<>();
+        output.add(s1);
+        output.add(s2);
+
+        //covnersion is needed
+        if(format == FormatType.POLAR)
+        {
+            output = Convert_to_Cartesian(output);
+        }
+
+        Add_Results(output);
+    }
+
+    private void Chartify(ArrayList<String> s, FormatType format)
+    {
+        ArrayList<String> output = new ArrayList<>();
+
+        //Cartesian is needed for chart
+        if(format == FormatType.POLAR)
+        {
+            output = Convert_to_Cartesian(s);
+        }
+        else
+        {
+            output = s;
+        }
+
+        Add_Results(output);
+    }
+
+
+
+    private FormatType formatinput1, formatinput2, formatoutput1;
     private Translator_Callback callback;
+    private Chartbuilder chart;
 
 }

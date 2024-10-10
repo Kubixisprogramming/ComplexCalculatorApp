@@ -48,9 +48,8 @@ android {
 
 dependencies {
 
-    implementation ("com.github.PhilJay:MPAndroidChart:v3.1.0")
-    implementation("com.google.android.material:material:1.11.0")
     implementation ("com.ezylang:EvalEx:3.3.0")
+    implementation ("com.androidplot:androidplot-core:1.5.11")
 
     implementation("androidx.appcompat:appcompat:1.7.0")
     implementation("com.google.android.material:material:1.12.0")

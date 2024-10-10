@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:ap="http://schemas.androidplot.com"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -38,13 +39,19 @@
             >
 
             <!--Plot used to visualize calculations-->
-            <com.github.mikephil.charting.charts.ScatterChart
+            <com.androidplot.xy.XYPlot
+                android:id="@+id/advancedchart"
                 android:layout_width="match_parent"
                 android:layout_height="400dp"
                 android:layout_marginTop="20dp"
                 android:layout_marginHorizontal="10dp"
-
-                android:id="@+id/advancedchart"/>
+                ap:lineLabelTextSize="12sp"
+                ap:graphBackgroundColor="#FFFFFF"
+                ap:domainGridLineColor="#B0B0B0"
+                ap:rangeGridLineColor="#B0B0B0"
+                ap:rangeOriginLineColor="#000000"
+                ap:domainOriginLineColor="#000000"
+                />
 
 
             <!--First Input unit-->

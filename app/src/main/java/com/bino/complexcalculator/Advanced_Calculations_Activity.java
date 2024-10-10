@@ -28,7 +28,7 @@ import Calculator.Translator_Callback;
 import Calculator.Operation;
 import Calculator.FormatLoc;
 import Calculator.FormatConverter;
-import Chart.Chartbuilder;
+
 import CustomDialogs.AdvInputCallback;
 import CustomDialogs.AdvNumberInputDialog;
 import CustomDialogs.NumberInputCallback;
@@ -45,8 +45,8 @@ public class Advanced_Calculations_Activity extends AppCompatActivity implements
         extraresultcontainer = findViewById(R.id.extraoutputbox);
         Create_Topbar();
 
-        chartbuilder = new Chartbuilder(findViewById(R.id.advancedchart));
-        translator = new Translator(FormatType.POLAR,FormatType.EMPTY,FormatType.POLAR,Advanced_Calculations_Activity.this);
+        translator = new Translator(FormatType.POLAR,FormatType.EMPTY,FormatType.POLAR,Advanced_Calculations_Activity.this,
+                findViewById(R.id.advancedchart));
 
         Init_Views();
         Init_Onclick();
@@ -315,6 +315,8 @@ public class Advanced_Calculations_Activity extends AppCompatActivity implements
                             {
                                 if(!txtinput1.getEditText().getText().equals(num))
                                 {
+                                    translator.Notify_Input_Changed_Left(num,txtinput1.getEditText().getText().toString(),
+                                            txtinput2.getEditText().getText().toString());
                                     txtinput1.getEditText().setText(num);
                                     txtoutput1.getEditText().setText("");
                                     txtoutput2.getEditText().setText("");
@@ -341,6 +343,8 @@ public class Advanced_Calculations_Activity extends AppCompatActivity implements
                             {
                                 if(!txtinput2.getEditText().getText().equals(num))
                                 {
+                                    translator.Notify_Input_Changed_Right(num,txtinput2.getEditText().getText().toString(),
+                                            txtinput1.getEditText().getText().toString());
                                     txtinput2.getEditText().setText(num);
                                     txtoutput1.getEditText().setText("");
                                     txtoutput2.getEditText().setText("");
@@ -445,7 +449,6 @@ public class Advanced_Calculations_Activity extends AppCompatActivity implements
 
     private AdvNumberInputDialog inputdialog = null;
     private NumberInputDialog basicinputdialog = null;
-    private Chartbuilder chartbuilder = null;
     private Translator translator = null;
 
 

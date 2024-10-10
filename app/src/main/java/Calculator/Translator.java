@@ -329,7 +329,8 @@ public class Translator implements CalculatorCallback
 
 
     //FORMATTING
-    public void NotifyFormatChange(FormatLoc location )
+
+    public ArrayList<String> Perform_Formatchange(ArrayList<String> tochange, FormatLoc location)
     {
         if(location == FormatLoc.INPUTTOP)
         {
@@ -337,10 +338,12 @@ public class Translator implements CalculatorCallback
             if(formatinput1 == FormatType.POLAR)
             {
                 formatinput1 = FormatType.CARTESIAN;
+                return Convert_to_Cartesian(tochange);
             }
             else
             {
                 formatinput1 = FormatType.POLAR;
+                return Convert_to_Polar(tochange);
             }
         }
         else if(location == FormatLoc.INPUTBOT)
@@ -349,10 +352,12 @@ public class Translator implements CalculatorCallback
             if(formatinput2 == FormatType.POLAR)
             {
                 formatinput2 = FormatType.CARTESIAN;
+                return Convert_to_Cartesian(tochange);
             }
             else
             {
                 formatinput2 = FormatType.POLAR;
+                return Convert_to_Polar(tochange);
             }
         }
         else if(location == FormatLoc.OUTPUT)
@@ -361,17 +366,52 @@ public class Translator implements CalculatorCallback
             if(formatoutput1 == FormatType.POLAR)
             {
                 formatoutput1 = FormatType.CARTESIAN;
+                return Convert_to_Cartesian(tochange);
             }
             else
             {
                 formatoutput1 = FormatType.POLAR;
+                return Convert_to_Polar(tochange);
             }
+        }
+        else
+        {
+            return new ArrayList<>();
         }
     }
 
 
+    private ArrayList<String> Convert_to_Cartesian(ArrayList<String> tochange)
+    {
+        ArrayList<String> out = new ArrayList<>();
 
+        for(int i = 0; i*2 < tochange.size();++i)
+        {
+            String[] conv = FormatConverter.Get().Convert_to_Cartesian(tochange.get(i*2),
+                    tochange.get(i*2+1));
 
+            out.add(conv[0]);
+            out.add(conv[1]);
+        }
+
+        return out;
+    }
+
+    private ArrayList<String> Convert_to_Polar(ArrayList<String> tochange)
+    {
+        ArrayList<String> out = new ArrayList<>();
+
+        for(int i = 0; i*2 < tochange.size();++i)
+        {
+            String[] conv = FormatConverter.Get().Convert_to_Polar(tochange.get(i*2),
+                    tochange.get(i*2+1));
+
+            out.add(conv[0]);
+            out.add(conv[1]);
+        }
+
+        return out;
+    }
 
 
     private FormatType formatinput1, formatinput2, formatoutput1;

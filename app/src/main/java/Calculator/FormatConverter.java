@@ -38,13 +38,12 @@ public class FormatConverter
 
         float phi = 0.0f;
 
-        if(fim >= 0.0f)
-        {
-            phi = (float)Math.acos(fre / r);
-        }
-        else
-        {
-            phi = (float)Math.acos((-fre) / r) + (float)Math.PI;
+        if(r != 0.0f) {
+            if (fim >= 0.0f) {
+                phi = (float) Math.acos(fre / r);
+            } else {
+                phi = (float) Math.acos((-fre) / r) + (float) Math.PI;
+            }
         }
 
         output[0] = Round(String.valueOf(r));
@@ -77,9 +76,16 @@ public class FormatConverter
 
     public String Round(String in)
     {
-        BigDecimal bd = new BigDecimal(in);
-        bd = bd.setScale(precision, RoundingMode.HALF_UP).stripTrailingZeros();  // Rounds to precision decimal places
-        return bd.toString();
+        if(!in.equals(""))
+        {
+            BigDecimal bd = new BigDecimal(in);
+            bd = bd.setScale(precision, RoundingMode.HALF_UP).stripTrailingZeros();  // Rounds to precision decimal places
+            return bd.toString();
+        }
+        else
+        {
+            return "";
+        }
     }
 
 

@@ -46,13 +46,11 @@ public class Advanced_Calculations_Activity extends AppCompatActivity implements
         Create_Topbar();
 
         chartbuilder = new Chartbuilder(findViewById(R.id.advancedchart));
-        translator = new Translator(inputformat,FormatType.EMPTY,outputformat,Advanced_Calculations_Activity.this);
+        translator = new Translator(FormatType.POLAR,FormatType.EMPTY,FormatType.POLAR,Advanced_Calculations_Activity.this);
 
         Init_Views();
         Init_Onclick();
     }
-
-
 
     private void Init_Views()
     {
@@ -67,7 +65,6 @@ public class Advanced_Calculations_Activity extends AppCompatActivity implements
         btnroot = findViewById(R.id.btnroot);
         btnexpo = findViewById(R.id.btnexponent);
     }
-
 
     private void Init_Onclick()
     {
@@ -151,7 +148,19 @@ public class Advanced_Calculations_Activity extends AppCompatActivity implements
             @Override
             public void onClick(View view)
             {
-                HandleinputFormatchange(FormatLoc.INPUTTOP);
+                Change_Formatbuttons(FormatLoc.INPUTTOP);
+
+                ArrayList<String> curinput = new ArrayList<>();
+                curinput.add(txtinput1.getEditText().getText().toString());
+                curinput.add(txtinput2.getEditText().getText().toString());
+
+                ArrayList<String> converted = translator.Perform_Formatchange(curinput,FormatLoc.INPUTTOP);
+
+                if(converted.size() > 0)
+                {
+                    txtinput1.getEditText().setText(converted.get(0));
+                    txtinput2.getEditText().setText(converted.get(1));
+                }
             }
         });
 
@@ -160,177 +169,133 @@ public class Advanced_Calculations_Activity extends AppCompatActivity implements
             @Override
             public void onClick(View view)
             {
-                HandleinputFormatchange(FormatLoc.OUTPUT);
+                Change_Formatbuttons(FormatLoc.OUTPUT);
+
+                ArrayList<String> curoutput = new ArrayList<>();
+                curoutput.add(txtoutput1.getEditText().getText().toString());
+                curoutput.add(txtoutput2.getEditText().getText().toString());
+
+                ArrayList<String> extraoutputs = Extract_Extraoutputs();
+
+                if(extraoutputs.size() > 0)
+                {
+                    curoutput.addAll(extraoutputs);
+                }
+
+
+                ArrayList<String> converted = translator.Perform_Formatchange(curoutput,FormatLoc.OUTPUT);
+
+                if(converted.size() > 0)
+                {
+                    txtoutput1.getEditText().setText(converted.get(0));
+                    txtoutput2.getEditText().setText(converted.get(1));
+                    converted.remove(0);
+                    converted.remove(0);
+                }
+
+                if(converted.size() > 0)
+                {
+                    Set_Extraoutputs(converted);
+                }
             }
         });
     }
-    //inputtop = 0, inputbot = 1, output = 2
 
-    private void HandleinputFormatchange(FormatLoc location)
+    private void Change_Formatbuttons(FormatLoc location)
     {
-        String[] output;
-        translator.NotifyFormatChange(location);
-
         if(location == FormatLoc.INPUTTOP)
         {
-
-            if(inputformat == FormatType.CARTESIAN)
+            if(btninputformat.getText().equals("P"))
             {
-                output = Convert_to_Polar(
-                        txtinput1.getEditText().getText().toString(),
-                        txtinput2.getEditText().getText().toString()
-                );
-
-                txtinput1.setHint("R");
-                txtinput2.setHint("Phi");
                 btninputformat.setText("C");
-                inputformat = FormatType.POLAR;
+                txtinput1.setHint("Re");
+                txtinput2.setHint("Im");
             }
             else
             {
-                output = Convert_to_Cartesian(
-                        txtinput1.getEditText().getText().toString(),
-                        txtinput2.getEditText().getText().toString()
-                );
-
-                txtinput1.setHint("Re");
-                txtinput2.setHint("Im");
                 btninputformat.setText("P");
-                inputformat = FormatType.CARTESIAN;
-            }
-
-            if(output[0].length() != 0 && output[1].length() != 0)
-            {
-                txtinput1.getEditText().setText(output[0]);
-                txtinput2.getEditText().setText(output[1]);
+                txtinput1.setHint("R");
+                txtinput2.setHint("Phi");
             }
         }
         else if(location == FormatLoc.OUTPUT)
         {
-
-            if(outputformat == FormatType.CARTESIAN)
+            if(btnoutputformat.getText().equals("P"))
             {
-                output = FormatConverter.Get().Convert_to_Polar(
-                        txtoutput1.getEditText().getText().toString(),
-                        txtoutput2.getEditText().getText().toString()
-                );
-
                 btnoutputformat.setText("C");
-                outputformat = FormatType.POLAR;
 
-                Convert_Extraoutputs(FormatType.POLAR);
             }
             else
             {
-                output = FormatConverter.Get().Convert_to_Cartesian(
-                        txtoutput1.getEditText().getText().toString(),
-                        txtoutput2.getEditText().getText().toString()
-                );
-
                 btnoutputformat.setText("P");
-                outputformat = FormatType.CARTESIAN;
-                Convert_Extraoutputs(FormatType.CARTESIAN);
-            }
-
-            if(output[0].length() != 0 && output[1].length() != 0)
-            {
-                txtoutput1.getEditText().setText(output[0]);
-                txtoutput2.getEditText().setText(output[1]);
             }
         }
-
     }
 
-
-    private void Convert_Extraoutputs(FormatType format)
+    private ArrayList<String> Extract_Extraoutputs()
     {
+        ArrayList<String> extraoutputs = new ArrayList<>();
 
-        if(format == FormatType.POLAR)
+        for (int i = 0; i < extraresultcontainer.getChildCount(); i++)
         {
-            for (int i = 0; i < extraresultcontainer.getChildCount(); i++)
+            View child = extraresultcontainer.getChildAt(i);
+
+            // Check if the child is an instance of TextInputLayout
+            if (child instanceof TextInputLayout)
             {
-                View child = extraresultcontainer.getChildAt(i);
+                TextInputLayout textInputLayout = (TextInputLayout) child;
 
-                // Check if the child is an instance of TextInputLayout
-                if (child instanceof TextInputLayout)
+                if (textInputLayout != null)
                 {
-                    TextInputLayout textInputLayout = (TextInputLayout) child;
+                    String s = textInputLayout.getEditText().getText().toString();
+                    String[] numberstring = s.split(": ");
+                    String numstring = numberstring[1];
+                    String prefix = numberstring[0];
 
-                    if (textInputLayout != null)
-                    {
-                        String s = textInputLayout.getEditText().getText().toString();
+                    String[] numbers = numstring.split(",");
 
-
-                        String[] numberstring = s.split(": ");
-
-                        String numstring = numberstring[1];
-                        String prefix = numberstring[0];
-
-                        String[] numbers = numstring.split(",");
-
-                        String s1 = numbers[0];
-                        String s2 = numbers[1];
-
-                        String[] conv = Convert_to_Polar(s1,s2);
-
-
-                        String resultstring = prefix +": "+ conv[0] + " , " + conv[1];
-
-                        textInputLayout.getEditText().setText(resultstring);
-                    }
-                }
-            }
-        }
-        else
-        {
-            for (int i = 0; i < extraresultcontainer.getChildCount(); i++)
-            {
-                View child = extraresultcontainer.getChildAt(i);
-
-                // Check if the child is an instance of TextInputLayout
-                if (child instanceof TextInputLayout)
-                {
-                    TextInputLayout textInputLayout = (TextInputLayout) child;
-
-                    if (textInputLayout != null)
-                    {
-                        String s = textInputLayout.getEditText().getText().toString();
-
-
-                        String[] numberstring = s.split(": ");
-
-                        String numstring = numberstring[1];
-                        String prefix = numberstring[0];
-
-                        String[] numbers = numstring.split(",");
-
-                        String s1 = numbers[0];
-                        String s2 = numbers[1];
-
-                        String[] conv = Convert_to_Cartesian(s1,s2);
-
-
-                        String resultstring = prefix +": "+ conv[0] + " , " + conv[1];
-
-                        textInputLayout.getEditText().setText(resultstring);
-                    }
+                    extraoutputs.add(numbers[0]);
+                    extraoutputs.add(numbers[1]);
                 }
             }
         }
 
-
+        return extraoutputs;
     }
 
-    private String[] Convert_to_Cartesian(String s1, String s2)
+    private void Set_Extraoutputs(ArrayList<String> extras)
     {
-        return FormatConverter.Get().Convert_to_Cartesian(s1,s2);
-    }
+        for (int i = 0; i < extraresultcontainer.getChildCount(); i++)
+        {
+            View child = extraresultcontainer.getChildAt(i);
 
-    private String[] Convert_to_Polar(String s1, String s2)
-    {
-        return FormatConverter.Get().Convert_to_Polar(s1,s2);
-    }
+            // Check if the child is an instance of TextInputLayout
+            if (child instanceof TextInputLayout)
+            {
+                TextInputLayout textInputLayout = (TextInputLayout) child;
 
+                if (textInputLayout != null)
+                {
+                    String s = textInputLayout.getEditText().getText().toString();
+
+
+                    String[] numberstring = s.split(": ");
+
+                    String numstring = numberstring[1];
+                    String prefix = numberstring[0];
+
+                    String[] numbers = numstring.split(",");
+
+                    String s1 = extras.get(i*2);
+                    String s2 = extras.get(i*2+1);
+
+                    String resultstring = prefix +": "+ s1 + " , " + s2;
+
+                    textInputLayout.getEditText().setText(resultstring);
+                }
+            }
+        }
+    }
 
     //--------------------------------------------
     //Chart and visual related
@@ -351,7 +316,9 @@ public class Advanced_Calculations_Activity extends AppCompatActivity implements
                                 if(!txtinput1.getEditText().getText().equals(num))
                                 {
                                     txtinput1.getEditText().setText(num);
-                                    Refresh_Visuals();
+                                    txtoutput1.getEditText().setText("");
+                                    txtoutput2.getEditText().setText("");
+                                    Clear_Extraoutputs();
                                 }
                             }
                         },txtinput1.getEditText().getText().toString());
@@ -375,7 +342,9 @@ public class Advanced_Calculations_Activity extends AppCompatActivity implements
                                 if(!txtinput2.getEditText().getText().equals(num))
                                 {
                                     txtinput2.getEditText().setText(num);
-                                    Refresh_Visuals();
+                                    txtoutput1.getEditText().setText("");
+                                    txtoutput2.getEditText().setText("");
+                                    Clear_Extraoutputs();
                                 }
                             }
                         },txtinput2.getEditText().getText().toString());
@@ -397,8 +366,9 @@ public class Advanced_Calculations_Activity extends AppCompatActivity implements
                                 if(!txtinput3.getEditText().getText().equals(num))
                                 {
                                     txtinput3.getEditText().setText(num);
-
-                                    Refresh_Visuals();
+                                    txtoutput1.getEditText().setText("");
+                                    txtoutput2.getEditText().setText("");
+                                    Clear_Extraoutputs();
                                 }
                             }
                         },txtinput3.getEditText().getText().toString());
@@ -408,59 +378,6 @@ public class Advanced_Calculations_Activity extends AppCompatActivity implements
 
         });
     }
-
-    private void Refresh_Visuals()
-    {
-        chartbuilder.clear();
-
-        String s1 = txtinput1.getEditText().getText().toString();
-        String s2 = txtinput2.getEditText().getText().toString();
-        String s3 = txtoutput1.getEditText().getText().toString();
-        String s4 = txtoutput2.getEditText().getText().toString();
-
-
-        if(s1.length() != 0 && s2.length() != 0)
-        {
-            //Need to convert polar-format because chart can only handle cartesian
-            if(inputformat == FormatType.POLAR)
-            {
-                String[] output = Convert_to_Cartesian(s1,s2);
-                s1 = output[0];
-                s2 = output[1];
-            }
-
-            Add_visual_Input(s1,s2);
-        }
-
-        //Reset result if there is one
-        if(s3.length() != 0 && s4.length() != 0)
-        {
-            txtoutput1.getEditText().setText("");
-            txtoutput2.getEditText().setText("");
-
-            chartbuilder.Remove_Results();
-        }
-
-        //Also clear extra outputs which can spawn because of rooting operation
-        Clear_Extraoutputs();
-
-        chartbuilder.Refresh();
-    }
-
-    private void Add_visual_Input(String x, String y)
-    {
-        chartbuilder.Add_Input(Float.parseFloat(x),
-                Float.parseFloat(y));
-        chartbuilder.Refresh();
-    }
-
-    private void Add_visual_Output(String x, String y)
-    {
-        chartbuilder.Add_Result(Float.parseFloat(x),
-                Float.parseFloat(y));
-        chartbuilder.Refresh();
-    }
-
 
 
     private void Clear_Extraoutputs()
@@ -491,7 +408,6 @@ public class Advanced_Calculations_Activity extends AppCompatActivity implements
 
 
     //Menu
-
 
     //Creates and sets special top bar
     private void Create_Topbar()
@@ -529,20 +445,14 @@ public class Advanced_Calculations_Activity extends AppCompatActivity implements
 
     private AdvNumberInputDialog inputdialog = null;
     private NumberInputDialog basicinputdialog = null;
-
     private Chartbuilder chartbuilder = null;
     private Translator translator = null;
 
 
     //GUI
-
     private LinearLayout extraresultcontainer=null;
     private Button btninputformat, btnoutputformat;
-    private FormatType inputformat = FormatType.POLAR, outputformat = FormatType.POLAR;
-
     private TextInputLayout txtinput1, txtinput2, txtinput3, txtoutput1, txtoutput2;
-
     private Button btnroot, btnexpo;
-
     private Toolbar toolbar;
 }

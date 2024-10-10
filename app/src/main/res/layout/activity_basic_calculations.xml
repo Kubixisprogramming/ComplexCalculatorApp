@@ -108,7 +108,7 @@
                     android:layout_marginStart="40dp"
                     style="@style/Widget.Material3.Button.OutlinedButton"
 
-                    android:text="P"
+                    android:text="C"
                     android:textSize="15dp"
 
                     android:id="@+id/btninputformattop"/>
@@ -180,7 +180,7 @@
                     android:layout_marginStart="40dp"
                     style="@style/Widget.Material3.Button.OutlinedButton"
 
-                    android:text="P"
+                    android:text="C"
                     android:textSize="15dp"
 
                     android:id="@+id/btninputformatbot"/>
@@ -322,7 +322,7 @@
                     android:layout_marginStart="40dp"
                     style="@style/Widget.Material3.Button.OutlinedButton"
 
-                    android:text="P"
+                    android:text="C"
                     android:textSize="15dp"
 
                     android:id="@+id/btnoutputformat"/>

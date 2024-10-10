@@ -107,7 +107,7 @@
                     android:layout_marginStart="40dp"
                     style="@style/Widget.Material3.Button.OutlinedButton"
 
-                    android:text="C"
+                    android:text="P"
                     android:textSize="15dp"
 
                     android:id="@+id/btnadvancedinputformat"/>
@@ -241,7 +241,7 @@
                     android:layout_marginStart="40dp"
                     style="@style/Widget.Material3.Button.OutlinedButton"
 
-                    android:text="C"
+                    android:text="P"
                     android:textSize="15dp"
 
                     android:id="@+id/btnadvancedoutputformat"/>

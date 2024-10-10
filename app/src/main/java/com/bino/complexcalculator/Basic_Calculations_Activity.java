@@ -51,7 +51,7 @@ public class Basic_Calculations_Activity extends AppCompatActivity implements Tr
         Create_Topbar();
 
         chartbuilder = new Chartbuilder(findViewById(R.id.basicschart));
-        translator = new Translator(inputformattop,inputformatbot,outputformat,Basic_Calculations_Activity.this);
+        translator = new Translator(FormatType.CARTESIAN,FormatType.CARTESIAN,FormatType.CARTESIAN,Basic_Calculations_Activity.this);
 
         Init_Views();
         Init_Onclick();
@@ -156,21 +156,17 @@ public class Basic_Calculations_Activity extends AppCompatActivity implements Tr
 
     }
 
-
     @Override
     public void OnTranslationResult(String s1, String s2)
     {
         txtoutput1.getEditText().setText(s1);
         txtoutput2.getEditText().setText(s2);
-
     }
 
     @Override
     public void OnAdvancedTranslationResult(ArrayList<String> outputs) {
         //not needed for basic calculations
     }
-
-
 
 
     //---------------------------------------
@@ -192,7 +188,8 @@ public class Basic_Calculations_Activity extends AppCompatActivity implements Tr
                                 if(!txtinput1.getEditText().getText().equals(num))
                                 {
                                     txtinput1.getEditText().setText(num);
-                                    Refresh_Visuals();
+                                    txtoutput1.getEditText().setText("");
+                                    txtoutput2.getEditText().setText("");
                                 }
                             }
                         },txtinput1.getEditText().getText().toString());
@@ -216,7 +213,8 @@ public class Basic_Calculations_Activity extends AppCompatActivity implements Tr
                                 if(!txtinput2.getEditText().getText().equals(num))
                                 {
                                     txtinput2.getEditText().setText(num);
-                                    Refresh_Visuals();
+                                    txtoutput1.getEditText().setText("");
+                                    txtoutput2.getEditText().setText("");
                                 }
                             }
                         },txtinput2.getEditText().getText().toString());
@@ -239,7 +237,8 @@ public class Basic_Calculations_Activity extends AppCompatActivity implements Tr
                                 if(!txtinput3.getEditText().equals(num))
                                 {
                                     txtinput3.getEditText().setText(num);
-                                    Refresh_Visuals();
+                                    txtoutput1.getEditText().setText("");
+                                    txtoutput2.getEditText().setText("");
                                 }
 
                             }
@@ -263,7 +262,8 @@ public class Basic_Calculations_Activity extends AppCompatActivity implements Tr
                                 if(!txtinput4.getEditText().getText().equals(num))
                                 {
                                     txtinput4.getEditText().setText(num);
-                                    Refresh_Visuals();
+                                    txtoutput1.getEditText().setText("");
+                                    txtoutput2.getEditText().setText("");
                                 }
                             }
                         },txtinput4.getEditText().getText().toString());
@@ -273,73 +273,8 @@ public class Basic_Calculations_Activity extends AppCompatActivity implements Tr
         });
     }
 
-    private void Refresh_Visuals()
-    {
-        chartbuilder.clear();
-
-        String s1 = txtinput1.getEditText().getText().toString();
-        String s2 = txtinput2.getEditText().getText().toString();
-        String s3 = txtinput3.getEditText().getText().toString();
-        String s4 = txtinput4.getEditText().getText().toString();
-        String s5 = txtoutput1.getEditText().getText().toString();
-        String s6 = txtoutput2.getEditText().getText().toString();
-
-        if(s1.length() != 0 && s2.length() != 0)
-        {
-            //Need to convert polar-format because chart can only handle cartesian
-            if(inputformattop == FormatType.POLAR)
-            {
-                String[] output = Convert_to_Cartesian(s1,s2);
-                s1 = output[0];
-                s2 = output[1];
-            }
-
-            Add_visual_Input(s1,s2);
-        }
-
-        if(s3.length() != 0 && s4.length() != 0)
-        {
-            if(inputformatbot == FormatType.POLAR)
-            {
-                String[] output = Convert_to_Cartesian(s3,s4);
-                s3 = output[0];
-                s4 = output[1];
-            }
-
-            Add_visual_Input(s3,s4);
-        }
-
-        //Reset result if there is one
-        if(s5.length() != 0 && s6.length() != 0)
-        {
-            txtoutput1.getEditText().setText("");
-            txtoutput2.getEditText().setText("");
-
-            chartbuilder.Remove_Results();
-        }
-
-        chartbuilder.Refresh();
-    }
-
-    private void Add_visual_Input(String x, String y)
-    {
-        chartbuilder.Add_Input(Float.parseFloat(x),
-                Float.parseFloat(y));
-        chartbuilder.Refresh();
-    }
-
-    private void Add_visual_Output(String x, String y)
-    {
-        chartbuilder.Add_Result(Float.parseFloat(x),
-                Float.parseFloat(y));
-        chartbuilder.Refresh();
-    }
-
-
-
     //--------------------------------------------
     //Formatting
-
     private void Init_Formatbuttons()
     {
         btninputformattop.setOnClickListener(new View.OnClickListener()
@@ -347,7 +282,20 @@ public class Basic_Calculations_Activity extends AppCompatActivity implements Tr
             @Override
             public void onClick(View view)
             {
-                HandleinputFormatchange(FormatLoc.INPUTTOP);
+                Change_Formatbuttons(FormatLoc.INPUTTOP);
+
+                ArrayList<String> curinput = new ArrayList<>();
+                curinput.add(txtinput1.getEditText().getText().toString());
+                curinput.add(txtinput2.getEditText().getText().toString());
+
+                ArrayList<String> converted = translator.Perform_Formatchange(curinput,FormatLoc.INPUTTOP);
+
+                if(converted.size() > 0)
+                {
+                    txtinput1.getEditText().setText(converted.get(0));
+                    txtinput2.getEditText().setText(converted.get(1));
+                }
+
             }
         });
 
@@ -356,7 +304,19 @@ public class Basic_Calculations_Activity extends AppCompatActivity implements Tr
             @Override
             public void onClick(View view)
             {
-                HandleinputFormatchange(FormatLoc.INPUTBOT);
+                Change_Formatbuttons(FormatLoc.INPUTBOT);
+
+                ArrayList<String> curinput = new ArrayList<>();
+                curinput.add(txtinput3.getEditText().getText().toString());
+                curinput.add(txtinput4.getEditText().getText().toString());
+
+                ArrayList<String> converted = translator.Perform_Formatchange(curinput,FormatLoc.INPUTBOT);
+
+                if(converted.size() > 0)
+                {
+                    txtinput3.getEditText().setText(converted.get(0));
+                    txtinput4.getEditText().setText(converted.get(1));
+                }
             }
         });
 
@@ -365,129 +325,71 @@ public class Basic_Calculations_Activity extends AppCompatActivity implements Tr
             @Override
             public void onClick(View view)
             {
-                HandleinputFormatchange(FormatLoc.OUTPUT);
+                Change_Formatbuttons(FormatLoc.OUTPUT);
+
+                ArrayList<String> curoutput = new ArrayList<>();
+                curoutput.add(txtoutput1.getEditText().getText().toString());
+                curoutput.add(txtoutput2.getEditText().getText().toString());
+
+                ArrayList<String> converted = translator.Perform_Formatchange(curoutput,FormatLoc.OUTPUT);
+
+                if(converted.size() > 0)
+                {
+                    txtoutput1.getEditText().setText(converted.get(0));
+                    txtoutput2.getEditText().setText(converted.get(1));
+                }
             }
         });
     }
-    //inputtop = 0, inputbot = 1, output = 2
-    private void HandleinputFormatchange(FormatLoc location)
-    {
-        String[] output;
-        translator.NotifyFormatChange(location);
 
+
+    private void Change_Formatbuttons(FormatLoc location)
+    {
         if(location == FormatLoc.INPUTTOP)
         {
-            if(inputformattop == FormatType.CARTESIAN)
+            if(btninputformattop.getText().equals("P"))
             {
-                output = Convert_to_Polar(
-                        txtinput1.getEditText().getText().toString(),
-                        txtinput2.getEditText().getText().toString()
-                );
-
-                txtinput1.setHint("R");
-                txtinput2.setHint("Phi");
                 btninputformattop.setText("C");
-                inputformattop = FormatType.POLAR;
+                txtinput1.setHint("Re");
+                txtinput2.setHint("Im");
             }
             else
             {
-                output = Convert_to_Cartesian(
-                        txtinput1.getEditText().getText().toString(),
-                        txtinput2.getEditText().getText().toString()
-                );
-
-                txtinput1.setHint("Re");
-                txtinput2.setHint("Im");
                 btninputformattop.setText("P");
-                inputformattop = FormatType.CARTESIAN;
-            }
-
-            if(output[0].length() != 0 && output[1].length() != 0)
-            {
-                txtinput1.getEditText().setText(output[0]);
-                txtinput2.getEditText().setText(output[1]);
+                txtinput1.setHint("R");
+                txtinput2.setHint("Phi");
             }
         }
         else if(location == FormatLoc.INPUTBOT)
         {
-            if(inputformatbot == FormatType.CARTESIAN)
+            if(btninputformatbot.getText().equals("P"))
             {
-                output = FormatConverter.Get().Convert_to_Polar(
-                        txtinput3.getEditText().getText().toString(),
-                        txtinput4.getEditText().getText().toString()
-                );
-
-                txtinput3.setHint("R");
-                txtinput4.setHint("Phi");
                 btninputformatbot.setText("C");
-                inputformatbot = FormatType.POLAR;
+                txtinput3.setHint("Re");
+                txtinput4.setHint("Im");
             }
             else
             {
-                output = FormatConverter.Get().Convert_to_Cartesian(
-                        txtinput3.getEditText().getText().toString(),
-                        txtinput4.getEditText().getText().toString()
-                );
-
-                txtinput3.setHint("Re");
-                txtinput4.setHint("Im");
                 btninputformatbot.setText("P");
-                inputformatbot = FormatType.CARTESIAN;
-            }
-
-            if(output[0].length() != 0 && output[1].length() != 0)
-            {
-                txtinput3.getEditText().setText(output[0]);
-                txtinput4.getEditText().setText(output[1]);
+                txtinput3.setHint("R");
+                txtinput4.setHint("Phi");
             }
         }
         else if(location == FormatLoc.OUTPUT)
         {
-            if(outputformat == FormatType.CARTESIAN)
+            if(btnoutputformat.getText().equals("P"))
             {
-                output = FormatConverter.Get().Convert_to_Polar(
-                        txtoutput1.getEditText().getText().toString(),
-                        txtoutput2.getEditText().getText().toString()
-                );
-
                 btnoutputformat.setText("C");
-                outputformat = FormatType.POLAR;
+
             }
             else
             {
-                output = FormatConverter.Get().Convert_to_Cartesian(
-                        txtoutput1.getEditText().getText().toString(),
-                        txtoutput2.getEditText().getText().toString()
-                );
-
                 btnoutputformat.setText("P");
-                outputformat = FormatType.CARTESIAN;
-            }
-
-            if(output[0].length() != 0 && output[1].length() != 0)
-            {
-                txtoutput1.getEditText().setText(output[0]);
-                txtoutput2.getEditText().setText(output[1]);
             }
         }
-
     }
-
-    private String[] Convert_to_Cartesian(String s1, String s2)
-    {
-        return FormatConverter.Get().Convert_to_Cartesian(s1,s2);
-    }
-
-    private String[] Convert_to_Polar(String s1, String s2)
-    {
-        return FormatConverter.Get().Convert_to_Polar(s1,s2);
-    }
-
-
-
 
     //Menu
-
 
     //Creates and sets special top bar
     private void Create_Topbar()
@@ -524,23 +426,13 @@ public class Basic_Calculations_Activity extends AppCompatActivity implements Tr
 
     private Chartbuilder chartbuilder = null;
     private Translator translator = null;
-
-
     //Number input system
     AdvNumberInputDialog inputdialog = null;
 
     //GUI
-
-    private TextInputLayout txtinput1, txtinput2, txtinput3, txtinput4,
-            txtoutput1, txtoutput2;
+    private TextInputLayout txtinput1, txtinput2, txtinput3, txtinput4, txtoutput1, txtoutput2;
     private Button btninputformattop, btninputformatbot, btnoutputformat;
-    //when starting app cartesian format is default
-    private FormatType inputformattop = FormatType.CARTESIAN, inputformatbot = FormatType.CARTESIAN,
-            outputformat = FormatType.CARTESIAN;
-
     private Button btnaddition, btnsubtraction, btnmultiplication,btndivision;
-
     private Toolbar toolbar;
-
 
 }

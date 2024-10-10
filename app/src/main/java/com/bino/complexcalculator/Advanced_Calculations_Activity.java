@@ -22,6 +22,11 @@ import java.util.ArrayList;
 
 import Calculator.Calculator;
 import Calculator.CalculatorCallback;
+import Calculator.Translator;
+import Calculator.FormatType;
+import Calculator.Translator_Callback;
+import Calculator.Operation;
+import Calculator.FormatLoc;
 import Calculator.FormatConverter;
 import Chart.Chartbuilder;
 import CustomDialogs.AdvInputCallback;
@@ -29,7 +34,8 @@ import CustomDialogs.AdvNumberInputDialog;
 import CustomDialogs.NumberInputCallback;
 import CustomDialogs.NumberInputDialog;
 
-public class Advanced_Calculations_Activity extends AppCompatActivity implements CalculatorCallback {
+public class Advanced_Calculations_Activity extends AppCompatActivity implements Translator_Callback
+{
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -40,6 +46,7 @@ public class Advanced_Calculations_Activity extends AppCompatActivity implements
         Create_Topbar();
 
         chartbuilder = new Chartbuilder(findViewById(R.id.advancedchart));
+        translator = new Translator(inputformat,FormatType.EMPTY,outputformat,Advanced_Calculations_Activity.this);
 
         Init_Views();
         Init_Onclick();
@@ -82,7 +89,13 @@ public class Advanced_Calculations_Activity extends AppCompatActivity implements
             @Override
             public void onClick(View view)
             {
-                Perform_calculation("root");
+                translator.Perform_Calculation(
+                        txtinput1.getEditText().getText().toString(),
+                        txtinput2.getEditText().getText().toString(),
+                        txtinput3.getEditText().getText().toString(),
+                        "",
+                        Operation.ROOT
+                );
             }
         });
 
@@ -91,126 +104,41 @@ public class Advanced_Calculations_Activity extends AppCompatActivity implements
             @Override
             public void onClick(View view)
             {
-                Perform_calculation("expo");
+                translator.Perform_Calculation(
+                        txtinput1.getEditText().getText().toString(),
+                        txtinput2.getEditText().getText().toString(),
+                        txtinput3.getEditText().getText().toString(),
+                        "",
+                        Operation.EXP
+                );
             }
         });
 
     }
 
-
-    public void Perform_calculation(String operation)
-    {
-        String s1 = txtinput1.getEditText().getText().toString();
-        String s2 = txtinput2.getEditText().getText().toString();
-        String s3 = txtinput3.getEditText().getText().toString();
-
-        if(operation.equals("root"))
-        {
-            //convert both inputs to polar
-
-            if(!inputpolarformat)
-            {
-                String conv[] = Convert_to_Polar(s1,s2);
-                s1 = conv[0];
-                s2 = conv[1];
-            }
-
-            Calculator.Get(Advanced_Calculations_Activity.this).Root(s1,s2,s3);
-        }
-        else if(operation.equals("expo"))
-        {
-            //convert both inputs to polar
-
-            if(!inputpolarformat)
-            {
-                String conv[] = Convert_to_Polar(s1,s2);
-                s1 = conv[0];
-                s2 = conv[1];
-            }
-
-            Calculator.Get(Advanced_Calculations_Activity.this).Exponentiate(s1,s2,s3);
-        }
-
-    }
-
-
-    // This method will be called when the calculation is complete
     @Override
-    public void OnCalculationResult(String s1, String s2, boolean polarformat)
+    public void OnTranslationResult(String s1, String s2)
     {
+        txtoutput1.getEditText().setText(s1);
+        txtoutput2.getEditText().setText(s2);
+
         Clear_Extraoutputs();
-        if(s1.length() != 0 && s2.length() != 0)
-        {
-            Refresh_Visuals();
-
-            if(outputpolarformat == true && polarformat == false)
-            {
-                String[] conv = Convert_to_Polar(s1,s2);
-                s1 = conv[0];
-                s2 = conv[1];
-            }
-            else if(outputpolarformat == false && polarformat == true)
-            {
-                String[] conv = Convert_to_Cartesian(s1,s2);
-                s1 = conv[0];
-                s2 = conv[1];
-            }
-
-            txtoutput1.getEditText().setText(s1);
-            txtoutput2.getEditText().setText(s2);
-            chartbuilder.Remove_Results();
-
-            Add_visual_Output(s1,s2);
-        }
     }
 
     @Override
-    public void OnAdvancedCalculationResult(ArrayList<String> outputs, boolean polarformat)
+    public void OnAdvancedTranslationResult(ArrayList<String> outputs)
     {
-        //function is only called when there is a result
-
         Clear_Extraoutputs();
-        Refresh_Visuals();
-        ArrayList<String> cartesian = new ArrayList<>();
 
-        //We need a cartesian set for visual output (and for outputformat if not polar)
-        for(int i = 1; i < outputs.size(); ++i)
+        txtoutput1.getEditText().setText(outputs.get(0));
+        txtoutput2.getEditText().setText(outputs.get(1));
+
+        for(int i = 2; i < outputs.size(); i+=2)
         {
-            String[] conv = Convert_to_Cartesian(outputs.get(0),outputs.get(i));
-            cartesian.add(conv[0]);
-            cartesian.add(conv[1]);
-        }
-
-        if(outputpolarformat == false)
-        {
-            //Add first to to standard outputline
-
-            txtoutput1.getEditText().setText(cartesian.get(0));
-            txtoutput2.getEditText().setText(cartesian.get(1));
-            Add_visual_Output(cartesian.get(0),cartesian.get(1));
-
-            for(int i = 1; i < outputs.size()-1; ++i)
-            {
-                Add_Extraoutput(cartesian.get(2*i),cartesian.get(2*i+1),i+1);
-                Add_visual_Output(cartesian.get(2*i),cartesian.get(2*i+1));
-            }
-        }
-        else
-        {
-
-            txtoutput1.getEditText().setText(outputs.get(0));
-            txtoutput2.getEditText().setText(outputs.get(1));
-            Add_visual_Output(cartesian.get(0),cartesian.get(1));
-
-            for(int i = 1; i < outputs.size()-1; ++i)
-            {
-                Add_Extraoutput(outputs.get(0),outputs.get(i+1),i+1);
-                Add_visual_Output(cartesian.get(i*2),cartesian.get(2*i+1));
-            }
-
-
+            Add_Extraoutput(outputs.get(i),outputs.get(i+1),(i/2)+1);
         }
     }
+
 
 
     //--------------------------------------------
@@ -223,7 +151,7 @@ public class Advanced_Calculations_Activity extends AppCompatActivity implements
             @Override
             public void onClick(View view)
             {
-                HandleinputFormatchange(0);
+                HandleinputFormatchange(FormatLoc.INPUTTOP);
             }
         });
 
@@ -232,20 +160,21 @@ public class Advanced_Calculations_Activity extends AppCompatActivity implements
             @Override
             public void onClick(View view)
             {
-                HandleinputFormatchange(1);
+                HandleinputFormatchange(FormatLoc.OUTPUT);
             }
         });
     }
     //inputtop = 0, inputbot = 1, output = 2
 
-    private void HandleinputFormatchange(int lane)
+    private void HandleinputFormatchange(FormatLoc location)
     {
         String[] output;
+        translator.NotifyFormatChange(location);
 
-        if(lane == 0)
+        if(location == FormatLoc.INPUTTOP)
         {
 
-            if(inputpolarformat == false)
+            if(inputformat == FormatType.CARTESIAN)
             {
                 output = Convert_to_Polar(
                         txtinput1.getEditText().getText().toString(),
@@ -255,7 +184,7 @@ public class Advanced_Calculations_Activity extends AppCompatActivity implements
                 txtinput1.setHint("R");
                 txtinput2.setHint("Phi");
                 btninputformat.setText("C");
-                inputpolarformat = true;
+                inputformat = FormatType.POLAR;
             }
             else
             {
@@ -267,7 +196,7 @@ public class Advanced_Calculations_Activity extends AppCompatActivity implements
                 txtinput1.setHint("Re");
                 txtinput2.setHint("Im");
                 btninputformat.setText("P");
-                inputpolarformat = false;
+                inputformat = FormatType.CARTESIAN;
             }
 
             if(output[0].length() != 0 && output[1].length() != 0)
@@ -276,10 +205,10 @@ public class Advanced_Calculations_Activity extends AppCompatActivity implements
                 txtinput2.getEditText().setText(output[1]);
             }
         }
-        else if(lane == 1)
+        else if(location == FormatLoc.OUTPUT)
         {
 
-            if(outputpolarformat == false)
+            if(outputformat == FormatType.CARTESIAN)
             {
                 output = FormatConverter.Get().Convert_to_Polar(
                         txtoutput1.getEditText().getText().toString(),
@@ -287,9 +216,9 @@ public class Advanced_Calculations_Activity extends AppCompatActivity implements
                 );
 
                 btnoutputformat.setText("C");
-                outputpolarformat = true;
+                outputformat = FormatType.POLAR;
 
-                Convert_Extraoutputs(true);
+                Convert_Extraoutputs(FormatType.POLAR);
             }
             else
             {
@@ -299,8 +228,8 @@ public class Advanced_Calculations_Activity extends AppCompatActivity implements
                 );
 
                 btnoutputformat.setText("P");
-                outputpolarformat = false;
-                Convert_Extraoutputs(false);
+                outputformat = FormatType.CARTESIAN;
+                Convert_Extraoutputs(FormatType.CARTESIAN);
             }
 
             if(output[0].length() != 0 && output[1].length() != 0)
@@ -313,10 +242,10 @@ public class Advanced_Calculations_Activity extends AppCompatActivity implements
     }
 
 
-    private void Convert_Extraoutputs(boolean topolarformat)
+    private void Convert_Extraoutputs(FormatType format)
     {
 
-        if(topolarformat)
+        if(format == FormatType.POLAR)
         {
             for (int i = 0; i < extraresultcontainer.getChildCount(); i++)
             {
@@ -493,7 +422,7 @@ public class Advanced_Calculations_Activity extends AppCompatActivity implements
         if(s1.length() != 0 && s2.length() != 0)
         {
             //Need to convert polar-format because chart can only handle cartesian
-            if(inputpolarformat)
+            if(inputformat == FormatType.POLAR)
             {
                 String[] output = Convert_to_Cartesian(s1,s2);
                 s1 = output[0];
@@ -602,13 +531,14 @@ public class Advanced_Calculations_Activity extends AppCompatActivity implements
     private NumberInputDialog basicinputdialog = null;
 
     private Chartbuilder chartbuilder = null;
+    private Translator translator = null;
 
 
     //GUI
 
     private LinearLayout extraresultcontainer=null;
     private Button btninputformat, btnoutputformat;
-    private boolean inputpolarformat = true, outputpolarformat = true;
+    private FormatType inputformat = FormatType.POLAR, outputformat = FormatType.POLAR;
 
     private TextInputLayout txtinput1, txtinput2, txtinput3, txtoutput1, txtoutput2;
 

@@ -21,146 +21,92 @@ public class Calculator
 
 
     //Addition is easier with cartesian coordinates
-    public void Add(String s1, String s2, String s3, String s4)
+    public void Add(double n1, double n2, double n3, double n4)
     {
+        //adding re parts
+        double re = n1 + n3;
+        //Adding im
+        double im = n2 + n4;
 
-        if(s1.length() == 0 || s2.length() == 0 ||
-           s3.length() == 0 || s4.length() == 0)
-        {
-            instance.callback.OnCalculationResult("","",false);
-        }
-        else
-        {
-            //adding re parts
-            float re = Float.parseFloat(s1) + Float.parseFloat(s3);
-            //Adding im
-            float im = Float.parseFloat(s2) + Float.parseFloat(s4);
-
-            instance.callback.OnCalculationResult(FormatConverter.Get().Round(String.valueOf(re)),
-                    FormatConverter.Get().Round(String.valueOf(im)),false);
-        }
+        instance.callback.OnCalculationResult(re,im,Operation.ADD);
     }
 
     //Subtraction is easier with cartesian coordinates
-    public void Subtract(String s1, String s2, String s3, String s4)
+    public void Subtract(double n1, double n2, double n3, double n4)
     {
-        if(s1.length() == 0 || s2.length() == 0 ||
-                s3.length() == 0 || s4.length() == 0)
-        {
-            instance.callback.OnCalculationResult("","",false);
-        }
-        else
-        {
-            //sub re parts
-            float re = Float.parseFloat(s1) - Float.parseFloat(s3);
-            //sub im
-            float im = Float.parseFloat(s2) - Float.parseFloat(s4);
 
-            instance.callback.OnCalculationResult(FormatConverter.Get().Round(String.valueOf(re)),
-                    FormatConverter.Get().Round(String.valueOf(im)),false);
-        }
+        //sub re parts
+        double re = n1 - n3;
+        //sub im
+        double im = n2 - n4;
+
+        instance.callback.OnCalculationResult(re,im,Operation.SUB);
     }
 
 
     //multiplication is easier with polar coordinates
-    public void Multiply(String s1, String s2, String s3, String s4)
+    public void Multiply(double n1, double n2, double n3, double n4)
     {
 
-        if(s1.length() == 0 || s2.length() == 0 ||
-                s3.length() == 0 || s4.length() == 0)
-        {
-            instance.callback.OnCalculationResult("","",true);
-        }
-        else
-        {
-            //mult r's
-            float r = Float.parseFloat(s1) * Float.parseFloat(s3);
+        //mult r's
+        double r = n1 * n3;
+        //add phi's
+        double phi = n2 + n4;
 
-            //add phi's
-            float phi = Float.parseFloat(s2) + Float.parseFloat(s4);
-
-            instance.callback.OnCalculationResult(FormatConverter.Get().Round(String.valueOf(r)),
-                    FormatConverter.Get().Round(String.valueOf(phi)),true);
-        }
+        instance.callback.OnCalculationResult(r,phi,Operation.MUL);
     }
 
 
     //division is easier with polar coordinates
-    public void Divide(String s1, String s2, String s3, String s4)
+    public void Divide(double n1, double n2, double n3, double n4)
     {
 
-        if(s1.length() == 0 || s2.length() == 0 ||
-                s3.length() == 0 || s4.length() == 0)
-        {
-            instance.callback.OnCalculationResult("","",true);
-        }
-        else
-        {
-            //div r's
-            float r = Float.parseFloat(s1) / Float.parseFloat(s3);
+        //div r's
+        double r = n1 / n3;
 
-            //sub phi's
-            float phi = Float.parseFloat(s2) - Float.parseFloat(s4);
+        //sub phi's
+        double phi = n2 - n4;
 
-            instance.callback.OnCalculationResult(FormatConverter.Get().Round(String.valueOf(r)),
-                    FormatConverter.Get().Round(String.valueOf(phi)),true);
-        }
+        instance.callback.OnCalculationResult(r,phi,Operation.DIV);
     }
 
 
     //requires polar coordinates
-    public void Exponentiate(String s1, String s2,String exponent)
+    public void Exponentiate(double n1, double n2, double n3)
     {
 
-        if(s1.length() == 0 || s2.length() == 0 || exponent.length() == 0)
-        {
-            instance.callback.OnCalculationResult("","",true);
-        }
-        else
-        {
+        //expo r
+        double r = Math.pow(n1,n3);
 
-            float r = (float)Math.pow(Float.parseFloat(s1),Float.parseFloat(exponent));
+        //mul phi
+        double phi = n2 * n3;
 
-            float phi = Float.parseFloat(s2) * Float.parseFloat(exponent);
-
-            instance.callback.OnCalculationResult(FormatConverter.Get().Round(String.valueOf(r)),
-                    FormatConverter.Get().Round(String.valueOf(phi)),true);
-        }
-
+        instance.callback.OnCalculationResult(r,phi,Operation.EXP);
     }
 
-    public void Root(String s1, String s2, String rooter)
+    public void Root(double n1, double n2, double n3)
     {
-        if(s1.length() == 0 || s2.length() == 0 || rooter.length() == 0)
+        ArrayList<Double> results = new ArrayList<>();
+
+        double r = n1;
+        double phi = n2;
+        double n = n3;
+
+        //root r
+        r = Math.pow(r,1/n);
+
+        //first value is the r for all following roots
+        results.add(r);
+
+        for(int i = 1; i <= n; ++i)
         {
-            instance.callback.OnCalculationResult("","",true);
-        }
-        else
-        {
-            ArrayList<String> results = new ArrayList<>();
+            double phase = (phi / n) + ((2.0*Math.PI*(i-1)) / n);
 
-            float r = Float.parseFloat(s1);
-            float phi = Float.parseFloat(s2);
-            float n = Float.parseFloat(rooter);
-
-            r = (float)Math.pow(r,1/n);
-
-
-
-            results.add(FormatConverter.Get().Round(String.valueOf(r)));
-
-            for(int i = 1; i <= n; ++i)
-            {
-                double phase = (phi / n) + (2.0*Math.PI*(i-1)) / n;
-
-                results.add(FormatConverter.Get().Round(String.valueOf(phase)));
-            }
-
-            instance.callback.OnAdvancedCalculationResult(results,true);
+            results.add(phase);
         }
 
+        instance.callback.OnAdvancedCalculationResult(results,Operation.ROOT);
     }
-
 
     private static Calculator instance = null;
     private CalculatorCallback callback = null;

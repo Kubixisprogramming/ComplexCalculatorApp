@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public interface CalculatorCallback
 {
-    void OnCalculationResult(String s1, String s2, boolean polarformat);
+    void OnCalculationResult(Double n1, Double n2, Operation op);
 
-    void OnAdvancedCalculationResult(ArrayList<String> outputs, boolean polarformat);
+    void OnAdvancedCalculationResult(ArrayList<Double> outputs, Operation op);
 }

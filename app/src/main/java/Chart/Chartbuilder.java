@@ -3,128 +3,227 @@ package Chart;
 import static java.lang.Math.abs;
 
 import android.graphics.Color;
+import android.provider.ContactsContract;
 
-import com.androidplot.ui.widget.TextLabelWidget;
-import com.androidplot.xy.BoundaryMode;
-import com.androidplot.xy.LineAndPointFormatter;
-import com.androidplot.xy.PointLabelFormatter;
-import com.androidplot.xy.SimpleXYSeries;
-import com.androidplot.xy.XYPlot;
-import com.androidplot.xy.XYSeries;
 
+import com.jjoe64.graphview.GraphView;
+import com.jjoe64.graphview.series.DataPoint;
+import com.jjoe64.graphview.series.LineGraphSeries;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 
 public class Chartbuilder
 {
 
-    public Chartbuilder(XYPlot ref)
+    public Chartbuilder(GraphView ref)
     {
         chart = ref;
         axisDim = stdAxisDim;
         Init();
     }
 
-    // Refreshing is responsibility of the user
+    // Refreshing is the responsibility of the user
     public void Refresh()
     {
-        chart.redraw();
+        chart.onDataChanged(false, false);
     }
 
-    public void Add_Input(float x, float y)
+
+    public void Add_Input(double x, double y)
     {
         Adjust_Axis(x, y);
-        inputSeries.addLast(x, y);
+
+        if (inputSeries.getHighestValueX() > x)
+        {
+            //resort is necessary
+
+            ArrayList<DataPoint> points = Get_Input_Points();
+            points.add(new DataPoint(x,y));
+            points = Sort_Points(points);
+
+
+            inputSeries.resetData(points.toArray(new DataPoint[0]));
+        }
+        else
+        {
+            inputSeries.appendData(new DataPoint(x, y), false, 1000); // '1000' is max data points
+        }
     }
 
-    public void Remove_Input(float x,float y)
+    public void Remove_Input(double x, double y)
     {
+        // You can iterate and remove a specific point here, GraphView doesn't provide direct remove methods.
 
+        ArrayList<DataPoint> points = Get_Input_Points();
 
+        boolean resultrefresh = false;
+        for(int i = 0; i < points.size(); ++i)
+        {
+            if (points.get(i).getX() == x && points.get(i).getY() == y)
+            {
+                points.remove(i);
+                --i;
+                resultrefresh = true;
+            }
+        }
+
+        if(points.size() == 0)
+        {
+            Reset_Axis();
+        }
+
+        if(resultrefresh)
+        {
+            Remove_Results();
+        }
+
+        inputSeries.resetData(points.toArray(new DataPoint[0]));
     }
 
-    public void Add_Result(float x, float y)
+
+
+    public void Add_Result(double x, double y)
     {
         Adjust_Axis(x, y);
-        resultSeries.addLast(x, y);
 
-    }
+        if (resultSeries.getHighestValueX() > x)
+        {
+            //resort is necessary
 
-    public void Remove_Results()
-    {
-        resultSeries.clear();
-    }
+            ArrayList<DataPoint> points = Get_Output_Points();
+            points.add(new DataPoint(x,y));
+            points = Sort_Points(points);
 
-    public void clear()
-    {
-        inputSeries.clear();
-        resultSeries.clear();
-        Reset_Axis();
-    }
 
-    // Initialize the chart and datasets
-    private void Init()
-    {
-        // Create origin point
-        List<Number> originX = new ArrayList<>();
-        List<Number> originY = new ArrayList<>();
-        originX.add(0);
-        originY.add(0);
-
-        // Create input series
-        inputSeries = new SimpleXYSeries("Input");
-        resultSeries = new SimpleXYSeries("Result");
-
-        // Create formatters to style input and result points
-        LineAndPointFormatter inputFormatter = new LineAndPointFormatter(Color.BLUE, Color.BLUE, null, new PointLabelFormatter());
-        LineAndPointFormatter resultFormatter = new LineAndPointFormatter(Color.RED, Color.RED, null, new PointLabelFormatter());
-
-        // Add series and formatters to the plot
-        chart.addSeries(inputSeries, inputFormatter);
-        chart.addSeries(resultSeries, resultFormatter);
-
-        // Set domain (X-axis) and range (Y-axis) boundaries
-        chart.setDomainBoundaries(-axisDim, axisDim, BoundaryMode.FIXED);
-        chart.setRangeBoundaries(-axisDim, axisDim, BoundaryMode.FIXED);
-
-        // Set the chart title, labels, etc.
-        chart.setTitle((TextLabelWidget) null);
-        chart.getLegend().setVisible(true);
-
-        // Customize axes
-        chart.getDomainTitle().setText("X Axis");
-        chart.getRangeTitle().setText("Y Axis");
-
-        // Refresh to apply changes
-        chart.redraw();
-    }
-
-    private void Reset_Axis()
-    {
-        axisDim = stdAxisDim;
-        chart.setDomainBoundaries(-axisDim, axisDim, BoundaryMode.FIXED);
-        chart.setRangeBoundaries(-axisDim, axisDim, BoundaryMode.FIXED);
-        chart.redraw();
-    }
-
-    // Adjusts the axis if new data points go beyond current bounds
-    private void Adjust_Axis(float x, float y)
-    {
-        float competitor = Math.max(Math.abs(x), Math.abs(y));
-
-        if (competitor >= axisDim) {
-            axisDim = competitor + 1.0f;
-            chart.setDomainBoundaries(-axisDim, axisDim, BoundaryMode.FIXED);
-            chart.setRangeBoundaries(-axisDim, axisDim, BoundaryMode.FIXED);
+            resultSeries.resetData(points.toArray(new DataPoint[0]));
+        }
+        else
+        {
+            resultSeries.appendData(new DataPoint(x, y), false, 1000); // '1000' is max data points
         }
     }
 
 
+    public void Remove_Results()
+    {
+        resultSeries.resetData(new DataPoint[]{});  // Clears the result series
+    }
 
-    private XYPlot chart;
-    private SimpleXYSeries inputSeries;
-    private SimpleXYSeries resultSeries;    // Axis dimension settings
-    private float axisDim;
-    private float stdAxisDim = 5.0f;
+
+    private void Init()
+    {
+
+        // Initialize input and result series
+        inputSeries = new LineGraphSeries<>(new DataPoint[] {});
+        resultSeries = new LineGraphSeries<>(new DataPoint[] {});
+
+        // Customize input series style (blue points)
+        inputSeries.setColor(android.graphics.Color.BLUE);
+        inputSeries.setDrawDataPoints(true);
+        inputSeries.setDataPointsRadius(5);
+
+        // Customize result series style (red points)
+        resultSeries.setColor(android.graphics.Color.RED);
+        resultSeries.setDrawDataPoints(true);
+        resultSeries.setDataPointsRadius(5);
+
+        // Add series to the chart
+        chart.addSeries(inputSeries);
+        chart.addSeries(resultSeries);
+
+        // Set X and Y axis boundaries
+        chart.getViewport().setXAxisBoundsManual(true);
+        chart.getViewport().setYAxisBoundsManual(true);
+        chart.getViewport().setMinX(-axisDim);
+        chart.getViewport().setMaxX(axisDim);
+        chart.getViewport().setMinY(-axisDim);
+        chart.getViewport().setMaxY(axisDim);
+
+        // Enable scaling/zooming
+        chart.getViewport().setScalable(true);
+        chart.getViewport().setScalableY(true);
+
+        // Set axis labels (optional)
+        chart.getGridLabelRenderer().setHorizontalAxisTitle("Re Axis");
+        chart.getGridLabelRenderer().setVerticalAxisTitle("Im Axis");
+    }
+
+    // Reset axis boundaries to default
+    private void Reset_Axis()
+    {
+        axisDim = stdAxisDim;
+        chart.getViewport().setMinX(-axisDim);
+        chart.getViewport().setMaxX(axisDim);
+        chart.getViewport().setMinY(-axisDim);
+        chart.getViewport().setMaxY(axisDim);
+        chart.onDataChanged(false, false);
+    }
+
+    // Adjusts the axis if a point exceeds current boundaries
+    private void Adjust_Axis(double x, double y)
+    {
+        double competitor = Math.max(Math.abs(x), Math.abs(y));
+
+        if (competitor >= axisDim) {
+            axisDim = competitor + 1.0;
+            chart.getViewport().setMinX(-axisDim);
+            chart.getViewport().setMaxX(axisDim);
+            chart.getViewport().setMinY(-axisDim);
+            chart.getViewport().setMaxY(axisDim);
+        }
+    }
+
+    private ArrayList<DataPoint> Get_Input_Points()
+    {
+        ArrayList<DataPoint> points = new ArrayList<>();
+
+        Iterator<DataPoint> itpoints = inputSeries.getValues(inputSeries.getLowestValueX(),inputSeries.getHighestValueX());
+
+        while(itpoints.hasNext())
+        {
+            points.add(itpoints.next());
+        }
+
+        return points;
+    }
+
+    private ArrayList<DataPoint> Get_Output_Points()
+    {
+        ArrayList<DataPoint> points = new ArrayList<>();
+
+        Iterator<DataPoint> itpoints = resultSeries.getValues(resultSeries.getLowestValueX(),resultSeries.getHighestValueX());
+
+        while(itpoints.hasNext())
+        {
+            points.add(itpoints.next());
+        }
+
+        return points;
+    }
+
+    private ArrayList<DataPoint> Sort_Points(ArrayList<DataPoint> points)
+    {
+        // Sort the points by x-values
+        Collections.sort(points, new Comparator<DataPoint>() {
+            @Override
+            public int compare(DataPoint p1, DataPoint p2) {
+                return Double.compare(p1.getX(), p2.getX());
+            }
+        });
+
+        return points;
+    }
+
+
+
+
+    private GraphView chart;
+    private LineGraphSeries<DataPoint> inputSeries;
+    private LineGraphSeries<DataPoint> resultSeries;
+    private double axisDim;
+    private double stdAxisDim = 5.0;
 }

@@ -1,7 +1,8 @@
 package Calculator;
 
 
-import com.androidplot.xy.XYPlot;
+
+import com.jjoe64.graphview.GraphView;
 
 import java.util.ArrayList;
 
@@ -13,7 +14,7 @@ import Chart.Chartbuilder;
 public class Translator implements CalculatorCallback
 {
 
-    public Translator(FormatType t1, FormatType t2, FormatType t3,Translator_Callback callback, XYPlot ref)
+    public Translator(FormatType t1, FormatType t2, FormatType t3,Translator_Callback callback, GraphView ref)
     {
         formatinput1 = t1;
         formatinput2 = t2;
@@ -493,8 +494,8 @@ public class Translator implements CalculatorCallback
         //Add new results
         for(int i = 0; i*2 < resultpairs.size(); ++i)
         {
-            chart.Add_Result(Float.parseFloat(resultpairs.get(i*2)),
-                    Float.parseFloat(resultpairs.get(i*2+1)));
+            chart.Add_Result(Double.parseDouble(resultpairs.get(i*2)),
+                    Double.parseDouble(resultpairs.get(i*2+1)));
         }
 
         chart.Refresh();

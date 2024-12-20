@@ -49,7 +49,10 @@ android {
 dependencies {
 
     implementation ("com.ezylang:EvalEx:3.3.0")
-    implementation ("com.androidplot:androidplot-core:1.5.11")
+    // Exclude android.support from GraphView
+    implementation("com.jjoe64:graphview:4.2.2") {
+        exclude(group = "com.android.support")
+    }
 
     implementation("androidx.appcompat:appcompat:1.7.0")
     implementation("com.google.android.material:material:1.12.0")

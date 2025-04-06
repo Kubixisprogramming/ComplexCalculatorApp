@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- Top App Bar -->
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:titleTextColor="@color/design_default_color_primary"
+            app:title="about this app"
+            app:menu="@menu/about_menu"
+            app:navigationIcon="@drawable/baseline_arrow_back_24"
+            android:background="@color/design_default_color_background"
+
+            android:id="@+id/topbarabout"/>
+    </com.google.android.material.appbar.AppBarLayout>
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="100dp"
+
+        android:text="This app uses following open-source components:"
+        android:textStyle="bold"
+        android:textSize="15dp"
+        android:textColor="@color/design_default_color_primary"
+
+        android:id="@+id/txtaboutheader"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="30dp"
+        android:layout_below="@id/txtaboutheader"
+
+        android:text="EvalEx\nCopyright 2012-2023 by Udo Klimaschewski\nThe software is licensed under the Apache License, Version 2.0 \n( see LICENSE file)"
+        android:textSize="13dp"
+        android:textColor="@color/design_default_color_primary"
+
+        android:id="@+id/txtwelcome"/>
+
+</RelativeLayout>

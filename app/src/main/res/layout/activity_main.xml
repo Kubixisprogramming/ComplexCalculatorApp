@@ -33,7 +33,7 @@
             android:layout_below="@id/txtwelcome"
             android:layout_marginTop="100dp"
 
-            android:text="Basic calculations"
+            android:text="basic"
             android:textSize="25dp"
 
             android:id="@+id/btngotobasic"/>
@@ -51,9 +51,25 @@
             android:layout_below="@id/btngotobasic"
 
 
-            android:text="Advanced calculations"
+            android:text="advanced"
             android:textSize="25dp"
 
             android:id="@+id/btngotoadvanced"/>
+
+
+        <!--About button-->
+        <com.google.android.material.button.MaterialButton
+            android:layout_width="320dp"
+            android:layout_height="wrap_content"
+            style="@style/Widget.Material3.Button.OutlinedButton"
+            app:cornerRadius="0dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="50dp"
+            android:layout_below="@id/btngotoadvanced"
+
+            android:text="about"
+            android:textSize="25dp"
+
+            android:id="@+id/btngotoabout"/>
 
 </RelativeLayout>

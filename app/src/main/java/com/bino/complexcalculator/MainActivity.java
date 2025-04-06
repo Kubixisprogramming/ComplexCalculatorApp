@@ -25,6 +25,7 @@ public class MainActivity extends AppCompatActivity
     {
         btnbasic = findViewById(R.id.btngotobasic);
         btnadvanced = findViewById(R.id.btngotoadvanced);
+        btnabout = findViewById(R.id.btngotoabout);
 
         btnbasic.setOnClickListener(new View.OnClickListener()
         {
@@ -45,9 +46,17 @@ public class MainActivity extends AppCompatActivity
                 startActivity(intent);
             }
         });
+
+        btnabout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this,About_Activity.class);
+                startActivity(intent);
+            }
+        });
     }
 
 
-    private Button btnbasic, btnadvanced;
+    private Button btnbasic, btnadvanced, btnabout;
 
 }

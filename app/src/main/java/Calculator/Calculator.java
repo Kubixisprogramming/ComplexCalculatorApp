@@ -1,6 +1,5 @@
 package Calculator;
 
-import java.text.Normalizer;
 import java.util.ArrayList;
 
 public class Calculator

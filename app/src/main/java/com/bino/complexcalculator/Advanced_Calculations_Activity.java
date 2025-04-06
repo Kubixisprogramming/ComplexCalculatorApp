@@ -11,23 +11,17 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 
-import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.ArrayList;
 
-import Calculator.Calculator;
-import Calculator.CalculatorCallback;
 import Calculator.Translator;
 import Calculator.FormatType;
 import Calculator.Translator_Callback;
 import Calculator.Operation;
 import Calculator.FormatLoc;
-import Calculator.FormatConverter;
 
 import CustomDialogs.AdvInputCallback;
 import CustomDialogs.AdvNumberInputDialog;
@@ -245,18 +239,15 @@ public class Advanced_Calculations_Activity extends AppCompatActivity implements
             {
                 TextInputLayout textInputLayout = (TextInputLayout) child;
 
-                if (textInputLayout != null)
-                {
-                    String s = textInputLayout.getEditText().getText().toString();
-                    String[] numberstring = s.split(": ");
-                    String numstring = numberstring[1];
-                    String prefix = numberstring[0];
+                String s = textInputLayout.getEditText().getText().toString();
+                String[] numberstring = s.split(": ");
+                String numstring = numberstring[1];
+                String prefix = numberstring[0];
 
-                    String[] numbers = numstring.split(",");
+                String[] numbers = numstring.split(",");
 
-                    extraoutputs.add(numbers[0]);
-                    extraoutputs.add(numbers[1]);
-                }
+                extraoutputs.add(numbers[0]);
+                extraoutputs.add(numbers[1]);
             }
         }
 
@@ -274,25 +265,22 @@ public class Advanced_Calculations_Activity extends AppCompatActivity implements
             {
                 TextInputLayout textInputLayout = (TextInputLayout) child;
 
-                if (textInputLayout != null)
-                {
-                    String s = textInputLayout.getEditText().getText().toString();
+                String s = textInputLayout.getEditText().getText().toString();
 
 
-                    String[] numberstring = s.split(": ");
+                String[] numberstring = s.split(": ");
 
-                    String numstring = numberstring[1];
-                    String prefix = numberstring[0];
+                String numstring = numberstring[1];
+                String prefix = numberstring[0];
 
-                    String[] numbers = numstring.split(",");
+                String[] numbers = numstring.split(",");
 
-                    String s1 = extras.get(i*2);
-                    String s2 = extras.get(i*2+1);
+                String s1 = extras.get(i*2);
+                String s2 = extras.get(i*2+1);
 
-                    String resultstring = prefix +": "+ s1 + " , " + s2;
+                String resultstring = prefix +": "+ s1 + " , " + s2;
 
-                    textInputLayout.getEditText().setText(resultstring);
-                }
+                textInputLayout.getEditText().setText(resultstring);
             }
         }
     }

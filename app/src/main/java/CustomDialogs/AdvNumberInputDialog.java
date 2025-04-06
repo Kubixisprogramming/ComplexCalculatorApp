@@ -15,9 +15,7 @@ import com.bino.complexcalculator.R;
 import com.ezylang.evalex.Expression;
 import com.google.android.material.textfield.TextInputLayout;
 
-import java.lang.reflect.Array;
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -130,7 +128,7 @@ public class AdvNumberInputDialog extends Dialog
                     inputbox.getEditText().setText(curinput.substring(0,newsize));
                     inputhistory.remove(inputhistory.size()-1);
                 }
-                else if(!curinput.equals(""))
+                else if(!curinput.isEmpty())
                 {
                     inputbox.getEditText().setText(curinput.substring(0, curinput.length() - 1));
                 }
@@ -177,7 +175,7 @@ public class AdvNumberInputDialog extends Dialog
     private boolean Check_Input(String curinput)
     {
 
-        if(curinput.equals(""))
+        if(curinput.isEmpty())
         {
             return true;
         }

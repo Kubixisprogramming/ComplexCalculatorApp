@@ -3,7 +3,6 @@ package com.bino.complexcalculator;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -14,11 +13,7 @@ import androidx.appcompat.widget.Toolbar;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.ArrayList;
-import java.util.List;
 
-import Calculator.Calculator;
-import Calculator.CalculatorCallback;
-import Calculator.FormatConverter;
 import Calculator.Translator;
 import Calculator.FormatType;
 import Calculator.Translator_Callback;
@@ -27,8 +22,6 @@ import Calculator.FormatLoc;
 
 import CustomDialogs.AdvInputCallback;
 import CustomDialogs.AdvNumberInputDialog;
-import CustomDialogs.NumberInputCallback;
-import CustomDialogs.NumberInputDialog;
 
 public class Basic_Calculations_Activity extends AppCompatActivity implements Translator_Callback
 {

@@ -443,14 +443,14 @@ public class Translator implements CalculatorCallback
         boolean refresh_needed = false;
 
         //remove if there was a old point
-        if(!oldinput1.equals("") && !oldinput2.equals(""))
+        if(!oldinput1.isEmpty() && !oldinput2.isEmpty())
         {
             chart.Remove_Input(Float.parseFloat(oldinput1), Float.parseFloat(oldinput2));
             refresh_needed = true;
         }
 
         //check if there will be a new input
-        if(!newinput1.equals("") && !oldinput2.equals(""))
+        if(!newinput1.isEmpty() && !oldinput2.isEmpty())
         {
             chart.Add_Input(Float.parseFloat(newinput1), Float.parseFloat(oldinput2));
             refresh_needed = true;
@@ -467,14 +467,14 @@ public class Translator implements CalculatorCallback
         boolean refresh_needed = false;
 
         //remove if there was a old point
-        if(!oldinput1.equals("") && !oldinput2.equals(""))
+        if(!oldinput1.isEmpty() && !oldinput2.isEmpty())
         {
             chart.Remove_Input(Float.parseFloat(oldinput1), Float.parseFloat(oldinput2));
             refresh_needed = true;
         }
 
         //check if there will be a new input
-        if(!newinput2.equals("") && !oldinput1.equals(""))
+        if(!newinput2.isEmpty() && !oldinput1.isEmpty())
         {
             chart.Add_Input(Float.parseFloat(oldinput1), Float.parseFloat(newinput2));
             refresh_needed = true;
@@ -519,7 +519,7 @@ public class Translator implements CalculatorCallback
 
     private void Chartify(ArrayList<String> s, FormatType format)
     {
-        ArrayList<String> output = new ArrayList<>();
+        ArrayList<String> output;
 
         //Cartesian is needed for chart
         if(format == FormatType.POLAR)

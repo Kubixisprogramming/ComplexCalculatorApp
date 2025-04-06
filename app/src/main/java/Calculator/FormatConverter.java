@@ -76,7 +76,7 @@ public class FormatConverter
 
     public String Round(String in)
     {
-        if(!in.equals(""))
+        if(!in.isEmpty())
         {
             BigDecimal bd = new BigDecimal(in);
             bd = bd.setScale(precision, RoundingMode.HALF_UP).stripTrailingZeros();  // Rounds to precision decimal places

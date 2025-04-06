@@ -1,9 +1,5 @@
 package Chart;
 
-import static java.lang.Math.abs;
-
-import android.graphics.Color;
-import android.provider.ContactsContract;
 
 
 import com.jjoe64.graphview.GraphView;
@@ -14,7 +10,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
-import java.util.List;
 
 public class Chartbuilder
 {
